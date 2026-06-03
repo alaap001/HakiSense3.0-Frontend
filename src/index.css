@@ -1,0 +1,353 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light theme (default) — aesthetic off-white "paper" with a faint violet tint. */
+    --background: 250 30% 96%;
+    --foreground: 250 30% 13%;
+    --card: 0 0% 100%;
+    --card-foreground: 250 30% 13%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 250 30% 13%;
+    --primary: 252 100% 68%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 250 24% 92%;
+    --secondary-foreground: 250 30% 18%;
+    --muted: 250 24% 93%;
+    --muted-foreground: 250 12% 42%;
+    --accent: 250 45% 93%;
+    --accent-foreground: 250 30% 15%;
+    --destructive: 0 74% 48%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 250 22% 87%;
+    --input: 250 22% 87%;
+    --ring: 252 100% 68%;
+    --radius: 0.875rem;
+
+    /* Derived theme tokens (mapped to Tailwind colors + used by .glass/.card-glass). */
+    --hairline: rgba(20, 20, 50, 0.12);
+    --hairline-strong: rgba(20, 20, 50, 0.20);
+    --surface: rgba(20, 20, 50, 0.04);
+    --surface-strong: rgba(20, 20, 50, 0.08);
+    --panel: rgba(20, 20, 50, 0.05);
+    --brand: 263 70% 50%;
+    --brand-strong: 264 69% 42%;
+    --pos: 162 90% 26%;
+    --neg: 345 80% 45%;
+    --warn: 30 90% 38%;
+
+    --glass-bg: rgba(255, 255, 255, 0.86);
+    --glass-border: rgba(20, 20, 50, 0.09);
+    --glass-strong-bg: rgba(255, 255, 255, 0.93);
+    --glass-strong-border: rgba(20, 20, 50, 0.12);
+    --card-glass-shadow: 0 16px 40px -14px rgba(20, 20, 50, 0.22), 0 2px 6px rgba(20, 20, 50, 0.06);
+    --vignette: rgba(20, 20, 50, 0.05);
+    --grain-opacity: 0.025;
+    --btn-secondary-bg: rgba(20, 20, 50, 0.05);
+    --btn-secondary-border: rgba(20, 20, 50, 0.10);
+    --btn-secondary-hover-bg: rgba(20, 20, 50, 0.08);
+    --btn-secondary-hover-border: rgba(20, 20, 50, 0.18);
+  }
+
+  .dark {
+    /* Dark theme — the original violet-noir look, preserved verbatim. */
+    --background: 240 33% 3%;
+    --foreground: 240 20% 97%;
+    --card: 240 25% 6%;
+    --card-foreground: 240 20% 97%;
+    --popover: 240 25% 6%;
+    --popover-foreground: 240 20% 97%;
+    --primary: 252 100% 68%;
+    --primary-foreground: 240 20% 97%;
+    --secondary: 240 15% 12%;
+    --secondary-foreground: 240 20% 97%;
+    --muted: 240 15% 12%;
+    --muted-foreground: 240 10% 68%;
+    --accent: 252 100% 68%;
+    --accent-foreground: 240 20% 97%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 10% 18%;
+    --input: 240 10% 18%;
+    --ring: 252 100% 68%;
+
+    --hairline: rgba(244, 244, 255, 0.10);
+    --hairline-strong: rgba(244, 244, 255, 0.22);
+    --surface: rgba(244, 244, 255, 0.03);
+    --surface-strong: rgba(244, 244, 255, 0.10);
+    --panel: rgba(0, 0, 0, 0.30);
+    --brand: 252 95% 85%;
+    --brand-strong: 252 100% 96%;
+    --pos: 158 64% 52%;
+    --neg: 351 95% 71%;
+    --warn: 43 96% 56%;
+
+    --glass-bg: rgba(11, 11, 20, 0.55);
+    --glass-border: rgba(244, 244, 255, 0.08);
+    --glass-strong-bg: rgba(11, 11, 20, 0.75);
+    --glass-strong-border: rgba(244, 244, 255, 0.12);
+    --card-glass-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+    --vignette: rgba(0, 0, 0, 0.6);
+    --grain-opacity: 0.04;
+    --btn-secondary-bg: rgba(244, 244, 255, 0.08);
+    --btn-secondary-border: rgba(244, 244, 255, 0.15);
+    --btn-secondary-hover-bg: rgba(244, 244, 255, 0.12);
+    --btn-secondary-hover-border: rgba(244, 244, 255, 0.25);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  /* scroll-behavior: smooth removed — conflicts with GSAP ScrollTrigger */
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+  }
+}
+
+/* Typography */
+.font-display {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.font-mono {
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* Glass morphism */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--glass-border);
+}
+
+.glass-strong {
+  background: var(--glass-strong-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-strong-border);
+}
+
+/* Card styles */
+.card-glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--glass-border);
+  border-radius: 22px;
+  box-shadow: var(--card-glass-shadow);
+}
+
+/* Violet glow */
+.glow-violet {
+  box-shadow: 0 0 40px rgba(123, 97, 255, 0.3), 0 0 80px rgba(123, 97, 255, 0.15);
+}
+
+.glow-violet-subtle {
+  box-shadow: 0 0 20px rgba(123, 97, 255, 0.2);
+}
+
+/* Text gradient — light theme uses deep, saturated violets so it stays readable on the
+   off-white paper; dark theme keeps the original bright gradient. */
+.text-gradient {
+  background: linear-gradient(135deg, #5B21B6 0%, #7C3AED 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.dark .text-gradient {
+  background: linear-gradient(135deg, #7B61FF 0%, #A78BFA 50%, #C4B5FD 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* Violet accent border */
+.border-violet {
+  border-color: rgba(123, 97, 255, 0.4);
+}
+
+/* App/public-page atmosphere — light theme only. A single soft violet halo at the top
+   so data pages (Dashboard, RunView, …) read as premium paper, not a flat white void.
+   Dark app pages keep their flat-dark + glass look (this layer is hidden there). */
+.app-aurora {
+  background:
+    radial-gradient(52rem 30rem at 50% -10%, rgba(123, 97, 255, 0.12), transparent 62%),
+    radial-gradient(34rem 26rem at 88% 2%, rgba(167, 139, 250, 0.08), transparent 60%);
+}
+
+/* Landing hero atmosphere — light theme only (dark uses the photo backdrop). A soft
+   violet aurora over the off-white paper, on-brand and clean. */
+.hero-aurora {
+  background:
+    radial-gradient(60rem 44rem at 80% -12%, rgba(123, 97, 255, 0.16), transparent 58%),
+    radial-gradient(52rem 40rem at -8% 14%, rgba(167, 139, 250, 0.13), transparent 55%),
+    radial-gradient(44rem 38rem at 50% 116%, rgba(123, 97, 255, 0.10), transparent 60%);
+}
+
+/* Background vignette */
+.vignette::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 0%, transparent 40%, var(--vignette) 100%);
+  pointer-events: none;
+}
+
+/* Grain overlay */
+.grain::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: var(--grain-opacity);
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* Button styles */
+.btn-primary {
+  @apply px-6 py-3 rounded-full font-medium transition-all duration-300;
+  background: linear-gradient(135deg, #7B61FF 0%, #6D28D9 100%);
+  box-shadow: 0 10px 30px rgba(123, 97, 255, 0.35);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 40px rgba(123, 97, 255, 0.45);
+}
+
+.btn-secondary {
+  @apply px-6 py-3 rounded-full font-medium transition-all duration-300;
+  background: var(--btn-secondary-bg);
+  border: 1px solid var(--btn-secondary-border);
+}
+
+.btn-secondary:hover {
+  background: var(--btn-secondary-hover-bg);
+  border-color: var(--btn-secondary-hover-border);
+}
+
+/* Micro label */
+.micro-label {
+  @apply text-xs font-medium tracking-[0.18em] uppercase;
+  font-family: 'IBM Plex Mono', monospace;
+  color: hsl(var(--muted-foreground));
+}
+
+/* Section base */
+.section-pinned {
+  @apply relative w-screen h-screen overflow-hidden;
+}
+
+.section-flowing {
+  @apply relative w-full;
+}
+
+/* Animation utilities */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    opacity: 0.75;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.animate-float {
+  animation: float 3.5s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+
+/* Hide scrollbar but keep functionality */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Responsive text */
+.text-hero {
+  font-size: clamp(44px, 6vw, 84px);
+  line-height: 0.92;
+}
+
+.text-section {
+  font-size: clamp(34px, 4.2vw, 64px);
+  line-height: 0.95;
+}
+
+/* Dashboard specific styles */
+.dashboard-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+/* Scrollbar styling for dashboard */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(123, 97, 255, 0.3);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(123, 97, 255, 0.5);
+}
+
+/* Animation utilities */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out forwards;
+}
