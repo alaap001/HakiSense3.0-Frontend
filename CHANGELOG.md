@@ -1,5 +1,105 @@
 # Changelog — HakiSense 3.0 Frontend
 
+## 2026-06-07 — POLISH: Sunset rebrand cohesion pass (auth + app chrome)
+
+**Task:** Complete the sunset transformation on the surfaces the global token swap recolored but didn't *elevate*. A full survey confirmed the data pages were already done (Dashboard/Journal already use the sunset `text-gradient`; `ProtectedLayout`/`PublicLayout` already paint the recolored `.app-aurora`; no off-brand built-in palette classes, no stray hexes, no old font literals anywhere). Only the auth front-door and the app nav were still on the old generic treatment.
+
+**Changed:**
+- `src/pages/Login.tsx`, `src/pages/Signup.tsx` — swapped the old two-blur-blob backdrop for the landing's crafted `.sunset-sky` + `.sun-glow` atmosphere (glass card + form untouched)
+- `src/components/AppNav.tsx` — wordmark now uses the sunset `text-gradient` "Sense" + `border-brand/40` badge, matching `LandingNav`
+- `src/types/journal.ts` — last literal `#7B61FF` (a JSDoc example only) → `#F4763B`
+
+**Unchanged:** All page layouts and logic. Data-page chrome (already on-brand). Backend.
+**Verification:** `tsc --noEmit` rc=0 + `eslint` rc=0; a repo-wide grep confirms **zero** literal violet hex remain in `src` (`.css`/`.ts`/`.tsx`).
+**Execution model:** unchanged. **Breaking changes:** none. **New dependencies:** none.
+
+## 2026-06-07 — FEAT: "Sunset" rebrand + Landing page rebuild
+
+**Task:** Rebrand HakiSense from violet to a sunset palette (powder blue · sunset orange · warm white) and rebuild the Landing page — visually and copy — into a high-conversion marketing page that sells the dossier, the per-stock chatbot, and the free journal. Approved decisions: rebrand the whole app now (global tokens) · add a "Dusk" dark variant · CSS sunset gradient + product mockups · new distinctive font pairing · bold/FOMO copy.
+
+**Theme (cascades to every page via tokens):** Redefined the full `:root` (light "Daybreak" — cream paper, dusk-navy ink, sunset-orange primary, powder-blue accent) and `.dark` (dark "Dusk" — deep navy-indigo, ember-orange + powder-blue) token sets in `index.css`. New `--sky`/`--sky-strong` tokens + a `sky` Tailwind color. The `violet` Tailwind scale is **repointed to sunset-orange hexes** so the ~34 files using `bg-violet/15`/`text-violet`/`border-violet`/`ring-violet/…` recolor for free with zero per-file edits (the name is now a misnomer — a `violet`→`sunset` source rename is a clean follow-up). Recolored the hardcoded effect classes (`.text-gradient`, `.btn-primary`, `.glow-violet*`, `.app-aurora`, `.hero-aurora`, scrollbar) and added `.sunset-sky` (the gradient backdrop), `.sun-glow` (bloom), `.glow-sky`.
+
+**Fonts (app-wide):** display **Bricolage Grotesque**, body **Hanken Grotesk**, mono **IBM Plex Mono** (kept). Loaded via Google-Fonts `@import` — **no package added**.
+
+**Landing:** new section flow — sunset hero (gradient sky + sun-glow + floating product mockups) → stat band → how it works → what's inside → per-stock chat spotlight → free-journal spotlight → "Research, not recommendations" approach → final CTA. GSAP entrance + mockup bob + scroll-linked parallax (no pin) + reveals. Copy is bold/FOMO; the "research, not investment advice" footer line is preserved.
+
+**Added:**
+- `src/components/landing/mockups.tsx` — `DossierMock`, `ChatMock`, `JournalMock` (pure CSS/SVG, no data, no deps)
+
+**Changed:**
+- `src/index.css` — both token sets → sunset/dusk; fonts; effect classes; new sunset atmosphere classes
+- `tailwind.config.js` — `violet` scale → sunset orange; add `sky` color; fonts; `boxShadow.glow/-lg`
+- `index.html` — marketing `<title>`
+- `src/pages/Landing.tsx` — full rebuild (sections, copy, mockups, GSAP)
+- `src/components/landing/LandingNav.tsx`, `src/components/site/SiteFooter.tsx` — sunset wordmark + footer product links
+
+**Unchanged:** Dashboard / Journal / Admin / RunView / auth-page **layouts** (they recolor automatically through the shared tokens — deliberate per-page polish is a later task). Backend. No image assets added.
+**Verification:** `tsc --noEmit` rc=0 + `eslint` rc=0 on all changed files. Developer-run: `npm run dev` → check `/` in light + dark (sunset/dusk, no violet leftovers), hero mockups animate, scroll reveals fire; `/dashboard` + `/journal` recolored cleanly; `npm run build` succeeds.
+**Execution model:** unchanged. **Breaking changes:** none (visual only). **New dependencies:** none (fonts via CSS @import; GSAP already present).
+
+## 2026-06-07 — FEAT: Admin panel (users / trades / journals / research runs)
+
+**Task:** A staff-only admin area to manage all users, their trades and journals, and the research runs they've run — with the lever to set a user's plan. Groundwork toward dossier-as-paid.
+
+**Architecture:** The admin pages call the backend `/api/admin/*` endpoints (service-role) — **not** Supabase directly — because they need `auth.users` data (email, plan, last sign-in) the anon key can't reach, and to keep the service key off the browser. New `src/lib/admin.ts` client mirrors `agentos.ts` (Bearer token; 403 = not admin, 503 = backend missing service key, surfaced to the UI). All data via `@tanstack/react-query` (`["admin", …]` keys). Hand-rolled tables/cards reusing the journal's look — **no new npm dependencies**.
+
+**Gating:** `useIsAdmin()` reads server-controlled `app_metadata.role === "admin"` (NOT `user_metadata`); open-dev (no Supabase) is treated as admin to match the backend. `AdminGuard` (nested route) bounces non-admins to `/dashboard`; the backend independently enforces the same role on every call (this guard is UX, not the boundary).
+
+**Added:**
+- `src/types/admin.ts` — admin payload types (overview, user, run, trade, detail)
+- `src/lib/admin.ts` — admin API client (`adminOverview/Users/User/Runs/Trades/SetPlan`)
+- `src/hooks/useAdmin.ts` — `useIsAdmin` + react-query hooks + `useSetPlan` mutation
+- `src/components/admin/` — `AdminGuard`, `widgets` (badges/loading/error/empty), `AdminOverview`, `AdminUsersTable`, `AdminRunsTable`, `AdminTradesTable`
+- `src/pages/Admin.tsx` — Overview / Users / Research runs / Trades tabs; `src/pages/AdminUserDetail.tsx` — per-user runs+trades+strategies + plan toggle
+
+**Changed:**
+- `src/App.tsx` — `/admin` + `/admin/users/:id` under `ProtectedLayout` → `AdminGuard`
+- `src/components/AppNav.tsx` — "Admin" nav link shown only to admins
+
+**Verification:** `tsc --noEmit` + `eslint` clean. Developer-run: set your user `app_metadata.role="admin"`, re-login → Admin link appears; `/admin` lists users/trades/runs; a non-admin is redirected; the plan toggle flips a user free↔pro (effective on their next token refresh). Requires the backend `SUPABASE_SERVICE_ROLE_KEY`.
+**Execution model:** unchanged. **Breaking changes:** none. **New dependencies:** none.
+
+## 2026-06-06 — FEAT: Trade Journal (free) + Pro-gated AI trade review
+
+**Task:** Add a full stock trade journal as a new section — free for everyone — with AI analysis as the paid tier. Manual entry, every key metric (R-multiple, planned R:R, win rate, expectancy, profit factor, max drawdown, equity curve), analytics, strategies, and a Pro-gated AI trade review.
+
+**Architecture:** Journal data lives in **Supabase (Postgres + RLS)**; the browser does CRUD directly via the anon key (RLS is the isolation boundary; `user_id` defaults to `auth.uid()`). The paid AI review streams from the backend (`POST /api/journal/analyze`, SSE). Metrics + charts are computed client-side; charts are hand-rolled SVG and forms use the repo's manual `useState` pattern — **no new npm dependencies** (Rule 6: match existing conventions).
+
+**Added:**
+- `src/types/journal.ts` — Trade/Strategy/TradeReview row types + Plan
+- `src/lib/journal/metrics.ts` — pure P&L/R-multiple/expectancy/equity-curve/drawdown math; `format.ts` — display formatters; `filters.ts` — filter state + `applyFilters`; `queries.ts` — supabase CRUD + screenshot upload/signed-URL
+- `src/hooks/` — `useJournal`, `useStrategies` (react-query), `useEntitlements` (reads `app_metadata.plan`), `useTradeAnalysis` (SSE)
+- `src/components/journal/` — `TradeForm`, `AddTradeDialog`, `TradeDetailDialog`, `TradeBlotter`, `StatsOverview`, `EquityCurve`, `RDistribution`, `CalendarHeatmap`, `PerformanceBreakdowns`, `StrategyManager`, `JournalFilters`, `AiTradeReview`, `UpgradeGate`
+- `src/pages/Journal.tsx` — Overview / Trades / Analytics tabs
+- `src/lib/agentos.ts` — `startTradeAnalysis()`; `src/types/api.ts` — `TradeAnalysisRequest` (+ SSEEvent fields)
+
+**Changed:**
+- `src/App.tsx` — `/journal` route under ProtectedLayout
+- `src/components/AppNav.tsx` — primary nav (Research / Journal)
+- `src/pages/RunView.tsx` — "Log a trade" button prefilling `ticker` + `research_session_id` (research→journal link)
+
+**Entitlements:** plan read from Supabase `app_metadata.plan` (deliberately NOT `user_metadata`, which the user can edit). Free = journal + all metrics/charts; Pro = AI review. Real billing (Stripe) deferred to a later phase — "Upgrade" is informational for now.
+
+**Verification:** `tsc -p tsconfig.app.json --noEmit` + `eslint` clean. Developer-run: `npm run dev` to exercise; `npm run build` for the production typecheck.
+**Execution model:** unchanged. **Breaking changes:** none. **New dependencies:** none.
+
+## 2026-06-06 — FEAT: TickerChat dock on the research page (streaming chat about a stock)
+
+**Task:** After research completes for a stock, let the user open a chatbot (bottom-right of the research page) and ask questions about that ticker. Answers are grounded server-side in the dossier's thesis, metrics, and filings.
+
+**Changed:**
+- `src/types/api.ts` — added `ChatRequest{ticker, message, chat_id?}`; extended `SSEEvent` with `chat_id`/`answer`/`tool_name`.
+- `src/lib/agentos.ts` — added `startChat(req, token?, signal?)`: `POST /api/chat` returning the streaming `Response` (Bearer auth), mirroring `startResearch`.
+- `src/hooks/useChat.ts` — NEW. Drives one conversation over SSE: stable `chat_id` minted on first send (fresh per page visit), `messages[]`, appends `RunContent` deltas to the trailing assistant bubble, maps `ToolCallStarted` → a status line ("Reading the filings…"), reconciles on `ChatComplete`, `AbortController` to cancel.
+- `src/components/dossier/TickerChat.tsx` — NEW. Floating launcher + panel matching the violet/dark system (hairline/surface/font-mono/custom-scrollbar). User bubbles right, assistant rendered via the existing `MarkdownView`, streaming status dot, dossier-aware suggested prompts, Enter-to-send, "research not advice" footer.
+- `src/pages/RunView.tsx` — mounts `<TickerChat ticker={run.ticker} companyName={desk.company?.name}/>` inside the `{run && desk}` block, so it appears only once the dossier has loaded.
+
+**Why send only the ticker:** the backend `answer_turn` already loads that ticker's saved Desk (thesis/findings/metrics/filings corpus) server-side, so the client sends only `{ticker, message, chat_id}` — simpler and safer (no client-supplied thesis to tamper with).
+
+**Unchanged:** all other pages/components, the research-run flow, auth. **Execution model:** unchanged. **Breaking changes:** none. **New dependencies:** none (react-markdown, lucide-react, shadcn input/button already present).
+
+**Verify (developer):** `npm run build` (typecheck + lint pass — done); `npm run dev`, open a finished run, ask "What's the core thesis?" (tokens stream), a follow-up (history resolves), and confirm signed-out users get no stream (backend 401).
+
 ## 2026-06-04 — Flesh out .gitignore
 
 **Task:** Write a proper `.gitignore` for the frontend repo.

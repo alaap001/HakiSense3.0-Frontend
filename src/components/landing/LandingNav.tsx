@@ -29,9 +29,9 @@ export function LandingNav() {
         <Link to="/" className="flex items-center gap-2">
           <img src="/logo.png" alt="HakiSense" className="size-8 object-contain" />
           <span className="font-display text-base font-semibold tracking-tight text-text-primary">
-            Haki<span className="text-violet">Sense</span>
+            Haki<span className="text-gradient">Sense</span>
           </span>
-          <Badge variant="outline" className="border-violet text-brand">
+          <Badge variant="outline" className="border-brand/40 text-brand">
             3.0
           </Badge>
         </Link>

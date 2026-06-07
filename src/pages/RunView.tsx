@@ -1,7 +1,10 @@
+import { useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import { useQuery } from "@tanstack/react-query"
-import { AlertTriangle, ArrowLeft, Loader2 } from "lucide-react"
+import { AlertTriangle, ArrowLeft, Loader2, NotebookPen } from "lucide-react"
 
+import { AddTradeDialog } from "@/components/journal/AddTradeDialog"
+import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { CompanyHeader } from "@/components/dossier/CompanyHeader"
 import { CoverageMap } from "@/components/dossier/CoverageMap"
@@ -13,6 +16,8 @@ import { ReportView } from "@/components/dossier/ReportView"
 import { ScenariosCard } from "@/components/dossier/ScenariosCard"
 import { SynthesisView } from "@/components/dossier/SynthesisView"
 import { ThesisCard } from "@/components/dossier/ThesisCard"
+import { TickerChat } from "@/components/dossier/TickerChat"
+import { useStrategies } from "@/hooks/useStrategies"
 import { useAuth } from "@/contexts/AuthContext"
 import { getDesk } from "@/lib/agentos"
 
@@ -33,6 +38,8 @@ const triggerClass =
 export default function RunView() {
   const { sessionId } = useParams<{ sessionId: string }>()
   const { getToken } = useAuth()
+  const { data: strategies = [] } = useStrategies()
+  const [logOpen, setLogOpen] = useState(false)
 
   const query = useQuery({
     queryKey: ["desk", sessionId],
@@ -70,8 +77,15 @@ export default function RunView() {
       )}
 
       {run && desk && (
+        <>
         <div className="mt-6">
-          <CompanyHeader company={desk.company} ticker={run.ticker} />
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <CompanyHeader company={desk.company} ticker={run.ticker} />
+            <Button variant="outline" size="sm" onClick={() => setLogOpen(true)} className="gap-1.5">
+              <NotebookPen className="size-3.5" />
+              Log a trade
+            </Button>
+          </div>
 
           <Tabs defaultValue="Report" className="mt-6 gap-4">
             <TabsList className="flex h-auto w-full flex-wrap justify-start gap-1.5 bg-transparent p-0">
@@ -126,6 +140,14 @@ export default function RunView() {
             </TabsContent>
           </Tabs>
         </div>
+        <TickerChat ticker={run.ticker} companyName={desk.company?.name} />
+        <AddTradeDialog
+          open={logOpen}
+          onOpenChange={setLogOpen}
+          strategies={strategies}
+          prefill={{ ticker: run.ticker, research_session_id: run.session_id }}
+        />
+        </>
       )}
     </div>
   )

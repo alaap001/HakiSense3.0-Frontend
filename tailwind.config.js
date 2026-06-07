@@ -40,18 +40,23 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Sunset-orange accent scale. NOTE: still named `violet` so the ~34 files that
+        // use `bg-violet/15`, `text-violet`, `border-violet`, `ring-violet/…` recolor to
+        // sunset for free (no per-file edits). The name is now a misnomer — a later
+        // mechanical `violet`→`sunset` rename is a clean follow-up. New code uses
+        // `brand` / `sky` (token-backed) instead.
         violet: {
-          DEFAULT: '#7B61FF',
-          50: '#F5F3FF',
-          100: '#EDE9FE',
-          200: '#DDD6FE',
-          300: '#C4B5FD',
-          400: '#A78BFA',
-          500: '#8B5CF6',
-          600: '#7B61FF',
-          700: '#6D28D9',
-          800: '#5B21B6',
-          900: '#4C1D95',
+          DEFAULT: '#F4763B',
+          50: '#FFF4EC',
+          100: '#FFE6D6',
+          200: '#FFC9A8',
+          300: '#FFA877',
+          400: '#FF8A5B',
+          500: '#F4763B',
+          600: '#E2592A',
+          700: '#C2410C',
+          800: '#9A3412',
+          900: '#7C2D12',
         },
         dark: {
           DEFAULT: '#05050B',
@@ -63,10 +68,15 @@ module.exports = {
           primary: 'hsl(var(--foreground) / <alpha-value>)',
           secondary: 'hsl(var(--muted-foreground) / <alpha-value>)',
         },
-        // Readable accent text/icon color — flips pale-violet (dark) ↔ deep-violet (light).
+        // Readable accent text/icon color — deep sunset orange (light) ↔ warm amber (dark).
         brand: {
           DEFAULT: 'hsl(var(--brand) / <alpha-value>)',
           strong: 'hsl(var(--brand-strong) / <alpha-value>)',
+        },
+        // Powder-blue secondary accent — the cool half of the sunset palette.
+        sky: {
+          DEFAULT: 'hsl(var(--sky) / <alpha-value>)',
+          strong: 'hsl(var(--sky-strong) / <alpha-value>)',
         },
         // Semantic accents — flip to readable deep shades on light, bright on dark.
         pos: 'hsl(var(--pos) / <alpha-value>)',
@@ -84,8 +94,8 @@ module.exports = {
         panel: 'var(--panel)',
       },
       fontFamily: {
-        display: ['Space Grotesk', 'sans-serif'],
-        sans: ['Inter', 'sans-serif'],
+        display: ['Bricolage Grotesque', 'sans-serif'],
+        sans: ['Hanken Grotesk', 'sans-serif'],
         mono: ['IBM Plex Mono', 'monospace'],
       },
       borderRadius: {
@@ -102,8 +112,8 @@ module.exports = {
         xs: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
         card: '0 24px 80px rgba(0, 0, 0, 0.55)',
         button: '0 10px 30px rgba(0, 0, 0, 0.35)',
-        glow: '0 0 40px rgba(123, 97, 255, 0.3)',
-        'glow-lg': '0 0 80px rgba(123, 97, 255, 0.4)',
+        glow: '0 0 40px rgba(244, 118, 59, 0.3)',
+        'glow-lg': '0 0 80px rgba(244, 118, 59, 0.4)',
       },
       keyframes: {
         "accordion-down": {

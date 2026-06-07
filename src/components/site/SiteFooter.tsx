@@ -8,7 +8,8 @@ const COLUMNS: { heading: string; links: { label: string; to: string }[] }[] = [
     links: [
       { label: "How it works", to: "/#how" },
       { label: "The dossier", to: "/#dossier" },
-      { label: "Our approach", to: "/#approach" },
+      { label: "Ask the filings", to: "/#chat" },
+      { label: "Free journal", to: "/#journal" },
       { label: "Dashboard", to: "/dashboard" },
     ],
   },
@@ -40,7 +41,7 @@ export function SiteFooter() {
             <Link to="/" className="flex items-center gap-2">
               <img src="/logo.png" alt="HakiSense" className="size-7 object-contain" />
               <span className="font-display text-base font-semibold tracking-tight text-text-primary">
-                Haki<span className="text-violet">Sense</span>
+                Haki<span className="text-gradient">Sense</span>
               </span>
             </Link>
             <p className="mt-4 text-sm leading-relaxed text-text-secondary">

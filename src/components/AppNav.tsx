@@ -1,5 +1,5 @@
 import { LogOut, Settings, Sparkles, User } from "lucide-react"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, NavLink, useNavigate } from "react-router-dom"
 
 import { SearchTrigger } from "@/components/search/SearchTrigger"
 import { ThemeToggle } from "@/components/ThemeToggle"
@@ -14,10 +14,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useAuth } from "@/contexts/AuthContext"
-import { getInitials } from "@/lib/utils"
+import { useIsAdmin } from "@/hooks/useAdmin"
+import { cn, getInitials } from "@/lib/utils"
+
+const navLinkClass = ({ isActive }: { isActive: boolean }) =>
+  cn(
+    "rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+    isActive ? "bg-violet/15 text-brand-strong" : "text-text-secondary hover:text-text-primary",
+  )
 
 export function AppNav() {
   const { displayName, user, isAuthenticated, signOut } = useAuth()
+  const isAdmin = useIsAdmin()
   const navigate = useNavigate()
 
   async function handleSignOut() {
@@ -33,12 +41,28 @@ export function AppNav() {
             <Sparkles className="size-3.5 text-brand" />
           </span>
           <span className="font-display text-sm font-semibold tracking-tight text-text-primary">
-            HakiSense
+            Haki<span className="text-gradient">Sense</span>
           </span>
-          <Badge variant="outline" className="border-violet text-brand">
+          <Badge variant="outline" className="border-brand/40 text-brand">
             3.0
           </Badge>
         </Link>
+
+        {isAuthenticated ? (
+          <nav className="hidden items-center gap-1 sm:flex">
+            <NavLink to="/dashboard" className={navLinkClass}>
+              Research
+            </NavLink>
+            <NavLink to="/journal" className={navLinkClass}>
+              Journal
+            </NavLink>
+            {isAdmin ? (
+              <NavLink to="/admin" className={navLinkClass}>
+                Admin
+              </NavLink>
+            ) : null}
+          </nav>
+        ) : null}
 
         <div className="ml-auto flex items-center gap-3">
           <ThemeToggle />

@@ -1,11 +1,15 @@
 import { Route, Routes } from "react-router-dom"
 
+import { AdminGuard } from "@/components/admin/AdminGuard"
 import { ProtectedLayout } from "@/components/ProtectedLayout"
 import { PublicLayout } from "@/components/site/PublicLayout"
 import { ScrollManager } from "@/components/site/ScrollManager"
 import About from "@/pages/About"
+import Admin from "@/pages/Admin"
+import AdminUserDetail from "@/pages/AdminUserDetail"
 import Contact from "@/pages/Contact"
 import Dashboard from "@/pages/Dashboard"
+import Journal from "@/pages/Journal"
 import Landing from "@/pages/Landing"
 import Login from "@/pages/Login"
 import NotFound from "@/pages/NotFound"
@@ -40,9 +44,14 @@ export default function App() {
 
         <Route element={<ProtectedLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/journal" element={<Journal />} />
           <Route path="/research/:sessionId" element={<RunView />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />
+          <Route element={<AdminGuard />}>
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/admin/users/:id" element={<AdminUserDetail />} />
+          </Route>
         </Route>
       </Routes>
     </>

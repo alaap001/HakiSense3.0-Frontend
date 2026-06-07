@@ -61,13 +61,11 @@ export default function Signup() {
 
   return (
     <div className="grain vignette relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-4 py-10">
+      {/* Sunset sky — same crafted backdrop as the landing, so the front door is on-brand. */}
+      <div aria-hidden className="sunset-sky absolute inset-0 z-0" />
       <div
         aria-hidden
-        className="animate-pulse-glow pointer-events-none absolute right-1/4 top-1/4 h-96 w-96 translate-x-1/2 rounded-full bg-violet/20 blur-[120px]"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute bottom-1/4 left-1/4 h-80 w-80 -translate-x-1/2 rounded-full bg-violet-700/15 blur-[100px]"
+        className="sun-glow animate-pulse-glow pointer-events-none absolute left-1/2 top-1/2 z-0 size-[36rem] max-w-[110vw] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-60 blur-[40px]"
       />
 
       <div

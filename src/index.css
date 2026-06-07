@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Hanken+Grotesk:wght@300..800&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,97 +6,108 @@
 
 @layer base {
   :root {
-    /* Light theme (default) — aesthetic off-white "paper" with a faint violet tint. */
-    --background: 250 30% 96%;
-    --foreground: 250 30% 13%;
-    --card: 0 0% 100%;
-    --card-foreground: 250 30% 13%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 250 30% 13%;
-    --primary: 252 100% 68%;
+    /* ───────────────────────── DAYBREAK (light, default) ─────────────────────────
+       Warm cream "paper" under a powder-blue sky, with a sunset-orange accent and a
+       dusk-navy ink. The whole app reads off these tokens, so this palette cascades
+       to every page. */
+    --background: 32 100% 97%;
+    --foreground: 212 44% 16%;
+    --card: 40 60% 99%;
+    --card-foreground: 212 44% 16%;
+    --popover: 38 70% 99%;
+    --popover-foreground: 212 44% 16%;
+    --primary: 18 89% 59%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 250 24% 92%;
-    --secondary-foreground: 250 30% 18%;
-    --muted: 250 24% 93%;
-    --muted-foreground: 250 12% 42%;
-    --accent: 250 45% 93%;
-    --accent-foreground: 250 30% 15%;
+    --secondary: 28 60% 92%;
+    --secondary-foreground: 214 40% 22%;
+    --muted: 28 40% 92%;
+    --muted-foreground: 213 22% 42%;
+    --accent: 28 65% 91%;
+    --accent-foreground: 212 44% 18%;
     --destructive: 0 74% 48%;
     --destructive-foreground: 0 0% 100%;
-    --border: 250 22% 87%;
-    --input: 250 22% 87%;
-    --ring: 252 100% 68%;
+    --border: 28 32% 86%;
+    --input: 28 32% 86%;
+    --ring: 18 89% 59%;
     --radius: 0.875rem;
 
     /* Derived theme tokens (mapped to Tailwind colors + used by .glass/.card-glass). */
-    --hairline: rgba(20, 20, 50, 0.12);
-    --hairline-strong: rgba(20, 20, 50, 0.20);
-    --surface: rgba(20, 20, 50, 0.04);
-    --surface-strong: rgba(20, 20, 50, 0.08);
-    --panel: rgba(20, 20, 50, 0.05);
-    --brand: 263 70% 50%;
-    --brand-strong: 264 69% 42%;
+    --hairline: rgba(22, 38, 58, 0.12);
+    --hairline-strong: rgba(22, 38, 58, 0.20);
+    --surface: rgba(22, 38, 58, 0.04);
+    --surface-strong: rgba(22, 38, 58, 0.08);
+    --panel: rgba(22, 38, 58, 0.05);
+    /* Readable accent text/icon — deep sunset orange on cream. */
+    --brand: 16 78% 50%;
+    --brand-strong: 18 88% 42%;
+    /* Powder-blue secondary accent (readable on cream). */
+    --sky: 199 52% 45%;
+    --sky-strong: 199 53% 36%;
     --pos: 162 90% 26%;
     --neg: 345 80% 45%;
     --warn: 30 90% 38%;
 
-    --glass-bg: rgba(255, 255, 255, 0.86);
-    --glass-border: rgba(20, 20, 50, 0.09);
-    --glass-strong-bg: rgba(255, 255, 255, 0.93);
-    --glass-strong-border: rgba(20, 20, 50, 0.12);
-    --card-glass-shadow: 0 16px 40px -14px rgba(20, 20, 50, 0.22), 0 2px 6px rgba(20, 20, 50, 0.06);
-    --vignette: rgba(20, 20, 50, 0.05);
+    --glass-bg: rgba(255, 251, 246, 0.86);
+    --glass-border: rgba(22, 38, 58, 0.09);
+    --glass-strong-bg: rgba(255, 251, 246, 0.93);
+    --glass-strong-border: rgba(22, 38, 58, 0.12);
+    --card-glass-shadow: 0 16px 44px -16px rgba(20, 30, 55, 0.22), 0 2px 6px rgba(20, 30, 55, 0.06);
+    --vignette: rgba(22, 38, 58, 0.05);
     --grain-opacity: 0.025;
-    --btn-secondary-bg: rgba(20, 20, 50, 0.05);
-    --btn-secondary-border: rgba(20, 20, 50, 0.10);
-    --btn-secondary-hover-bg: rgba(20, 20, 50, 0.08);
-    --btn-secondary-hover-border: rgba(20, 20, 50, 0.18);
+    --btn-secondary-bg: rgba(22, 38, 58, 0.05);
+    --btn-secondary-border: rgba(22, 38, 58, 0.10);
+    --btn-secondary-hover-bg: rgba(22, 38, 58, 0.08);
+    --btn-secondary-hover-border: rgba(22, 38, 58, 0.18);
   }
 
   .dark {
-    /* Dark theme — the original violet-noir look, preserved verbatim. */
-    --background: 240 33% 3%;
-    --foreground: 240 20% 97%;
-    --card: 240 25% 6%;
-    --card-foreground: 240 20% 97%;
-    --popover: 240 25% 6%;
-    --popover-foreground: 240 20% 97%;
-    --primary: 252 100% 68%;
-    --primary-foreground: 240 20% 97%;
-    --secondary: 240 15% 12%;
-    --secondary-foreground: 240 20% 97%;
-    --muted: 240 15% 12%;
-    --muted-foreground: 240 10% 68%;
-    --accent: 252 100% 68%;
-    --accent-foreground: 240 20% 97%;
-    --destructive: 0 84.2% 60.2%;
+    /* ───────────────────────────── DUSK (dark) ─────────────────────────────
+       The sky a few minutes after the sun drops: deep navy-indigo, an ember-orange
+       horizon glow and powder-blue highlights, with warm off-white text. */
+    --background: 216 48% 8%;
+    --foreground: 30 36% 92%;
+    --card: 214 44% 12%;
+    --card-foreground: 30 36% 92%;
+    --popover: 214 44% 11%;
+    --popover-foreground: 30 36% 92%;
+    --primary: 18 100% 67%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 215 30% 18%;
+    --secondary-foreground: 30 36% 92%;
+    --muted: 215 28% 17%;
+    --muted-foreground: 212 16% 68%;
+    --accent: 215 32% 22%;
+    --accent-foreground: 30 36% 94%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 10% 18%;
-    --input: 240 10% 18%;
-    --ring: 252 100% 68%;
+    --border: 214 26% 20%;
+    --input: 214 26% 20%;
+    --ring: 18 100% 67%;
 
-    --hairline: rgba(244, 244, 255, 0.10);
-    --hairline-strong: rgba(244, 244, 255, 0.22);
-    --surface: rgba(244, 244, 255, 0.03);
-    --surface-strong: rgba(244, 244, 255, 0.10);
-    --panel: rgba(0, 0, 0, 0.30);
-    --brand: 252 95% 85%;
-    --brand-strong: 252 100% 96%;
+    --hairline: rgba(244, 238, 230, 0.10);
+    --hairline-strong: rgba(244, 238, 230, 0.22);
+    --surface: rgba(244, 238, 230, 0.04);
+    --surface-strong: rgba(244, 238, 230, 0.10);
+    --panel: rgba(6, 12, 24, 0.40);
+    --brand: 26 100% 74%;
+    --brand-strong: 30 100% 92%;
+    --sky: 202 55% 70%;
+    --sky-strong: 200 70% 82%;
     --pos: 158 64% 52%;
     --neg: 351 95% 71%;
-    --warn: 43 96% 56%;
+    --warn: 38 96% 60%;
 
-    --glass-bg: rgba(11, 11, 20, 0.55);
-    --glass-border: rgba(244, 244, 255, 0.08);
-    --glass-strong-bg: rgba(11, 11, 20, 0.75);
-    --glass-strong-border: rgba(244, 244, 255, 0.12);
+    --glass-bg: rgba(13, 22, 38, 0.55);
+    --glass-border: rgba(244, 238, 230, 0.08);
+    --glass-strong-bg: rgba(13, 22, 38, 0.78);
+    --glass-strong-border: rgba(244, 238, 230, 0.12);
     --card-glass-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
-    --vignette: rgba(0, 0, 0, 0.6);
+    --vignette: rgba(3, 8, 16, 0.6);
     --grain-opacity: 0.04;
-    --btn-secondary-bg: rgba(244, 244, 255, 0.08);
-    --btn-secondary-border: rgba(244, 244, 255, 0.15);
-    --btn-secondary-hover-bg: rgba(244, 244, 255, 0.12);
-    --btn-secondary-hover-border: rgba(244, 244, 255, 0.25);
+    --btn-secondary-bg: rgba(244, 238, 230, 0.08);
+    --btn-secondary-border: rgba(244, 238, 230, 0.15);
+    --btn-secondary-hover-bg: rgba(244, 238, 230, 0.12);
+    --btn-secondary-hover-border: rgba(244, 238, 230, 0.25);
   }
 }
 
@@ -109,14 +120,14 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Hanken Grotesk', sans-serif;
     overflow-x: hidden;
   }
 }
 
 /* Typography */
 .font-display {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Bricolage Grotesque', sans-serif;
 }
 
 .font-mono {
@@ -148,51 +159,83 @@
   box-shadow: var(--card-glass-shadow);
 }
 
-/* Violet glow */
+/* Sunset glow (kept under the legacy .glow-violet* names so existing markup recolors
+   for free — the whole app moved off violet to the sunset accent). */
 .glow-violet {
-  box-shadow: 0 0 40px rgba(123, 97, 255, 0.3), 0 0 80px rgba(123, 97, 255, 0.15);
+  box-shadow: 0 0 40px rgba(244, 118, 59, 0.30), 0 0 80px rgba(244, 118, 59, 0.15);
 }
 
 .glow-violet-subtle {
-  box-shadow: 0 0 20px rgba(123, 97, 255, 0.2);
+  box-shadow: 0 0 20px rgba(244, 118, 59, 0.22);
 }
 
-/* Text gradient — light theme uses deep, saturated violets so it stays readable on the
-   off-white paper; dark theme keeps the original bright gradient. */
+/* Powder-blue glow, for the cooler accents. */
+.glow-sky {
+  box-shadow: 0 0 28px rgba(79, 163, 204, 0.28);
+}
+
+/* Text gradient — a sunset sweep (orange → rose). Light theme uses deeper, saturated
+   stops so it stays readable on the cream paper; dusk keeps it bright. */
 .text-gradient {
-  background: linear-gradient(135deg, #5B21B6 0%, #7C3AED 100%);
+  background: linear-gradient(120deg, #F4763B 0%, #EC4D7E 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .dark .text-gradient {
-  background: linear-gradient(135deg, #7B61FF 0%, #A78BFA 50%, #C4B5FD 100%);
+  background: linear-gradient(120deg, #FFB27A 0%, #FF8A5B 45%, #FF7AB0 100%);
   -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Violet accent border */
+/* Sunset accent border (kept under .border-violet so existing markup recolors). */
 .border-violet {
-  border-color: rgba(123, 97, 255, 0.4);
+  border-color: rgba(244, 118, 59, 0.40);
 }
 
-/* App/public-page atmosphere — light theme only. A single soft violet halo at the top
-   so data pages (Dashboard, RunView, …) read as premium paper, not a flat white void.
-   Dark app pages keep their flat-dark + glass look (this layer is hidden there). */
+/* App/public-page atmosphere — light theme only. A soft sunset wash at the top so data
+   pages (Dashboard, RunView, …) read as warm premium paper, not a flat white void.
+   Dark app pages keep their flat-dusk + glass look (this layer is hidden there). */
 .app-aurora {
   background:
-    radial-gradient(52rem 30rem at 50% -10%, rgba(123, 97, 255, 0.12), transparent 62%),
-    radial-gradient(34rem 26rem at 88% 2%, rgba(167, 139, 250, 0.08), transparent 60%);
+    radial-gradient(52rem 30rem at 50% -10%, rgba(244, 118, 59, 0.12), transparent 62%),
+    radial-gradient(34rem 26rem at 88% 2%, rgba(79, 163, 204, 0.10), transparent 60%);
 }
 
-/* Landing hero atmosphere — light theme only (dark uses the photo backdrop). A soft
-   violet aurora over the off-white paper, on-brand and clean. */
+/* Landing hero atmosphere — a literal sunset sky. Light: powder-blue overhead melting
+   through peach into a warm cream horizon with an orange bloom. Dusk: deep navy with an
+   ember horizon. Used as a fixed backdrop behind the hero. */
+.sunset-sky {
+  background:
+    radial-gradient(120% 80% at 50% 6%, rgba(159, 213, 240, 0.85) 0%, transparent 55%),
+    radial-gradient(130% 72% at 50% 120%, rgba(255, 138, 91, 0.55) 0%, rgba(255, 194, 161, 0.40) 38%, transparent 74%),
+    linear-gradient(180deg, #DCEFF7 0%, #FBE6D6 46%, #FFF1E6 78%, #FFF8F1 100%);
+}
+
+.dark .sunset-sky {
+  background:
+    radial-gradient(120% 80% at 50% 4%, rgba(46, 78, 122, 0.55) 0%, transparent 55%),
+    radial-gradient(135% 72% at 50% 122%, rgba(255, 138, 91, 0.45) 0%, rgba(255, 138, 91, 0.12) 40%, transparent 74%),
+    linear-gradient(180deg, #08111F 0%, #0C1830 52%, #14233A 100%);
+}
+
+/* The "sun" — a soft warm bloom you can place behind the hero copy. */
+.sun-glow {
+  background: radial-gradient(circle at center, rgba(255, 186, 130, 0.85) 0%, rgba(255, 138, 91, 0.42) 32%, transparent 70%);
+}
+
+.dark .sun-glow {
+  background: radial-gradient(circle at center, rgba(255, 150, 96, 0.55) 0%, rgba(255, 122, 70, 0.28) 34%, transparent 72%);
+}
+
+/* Hero atmosphere alias — light theme only (kept for any older references). */
 .hero-aurora {
   background:
-    radial-gradient(60rem 44rem at 80% -12%, rgba(123, 97, 255, 0.16), transparent 58%),
-    radial-gradient(52rem 40rem at -8% 14%, rgba(167, 139, 250, 0.13), transparent 55%),
-    radial-gradient(44rem 38rem at 50% 116%, rgba(123, 97, 255, 0.10), transparent 60%);
+    radial-gradient(60rem 44rem at 80% -12%, rgba(255, 138, 91, 0.18), transparent 58%),
+    radial-gradient(52rem 40rem at -8% 14%, rgba(159, 213, 240, 0.20), transparent 55%),
+    radial-gradient(44rem 38rem at 50% 116%, rgba(244, 118, 59, 0.12), transparent 60%);
 }
 
 /* Background vignette */
@@ -219,13 +262,13 @@
 /* Button styles */
 .btn-primary {
   @apply px-6 py-3 rounded-full font-medium transition-all duration-300;
-  background: linear-gradient(135deg, #7B61FF 0%, #6D28D9 100%);
-  box-shadow: 0 10px 30px rgba(123, 97, 255, 0.35);
+  background: linear-gradient(135deg, #FF8A5B 0%, #F4763B 52%, #E2592A 100%);
+  box-shadow: 0 10px 30px rgba(244, 118, 59, 0.38);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 14px 40px rgba(123, 97, 255, 0.45);
+  box-shadow: 0 14px 40px rgba(244, 118, 59, 0.50);
 }
 
 .btn-secondary {
@@ -327,12 +370,12 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(123, 97, 255, 0.3);
+  background: rgba(244, 118, 59, 0.30);
   border-radius: 3px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(123, 97, 255, 0.5);
+  background: rgba(244, 118, 59, 0.50);
 }
 
 /* Animation utilities */

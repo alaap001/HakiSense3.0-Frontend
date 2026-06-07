@@ -8,10 +8,13 @@ import type { Desk } from "@/types/desk"
 export interface SSEEvent {
   event: string
   session_id?: string
+  chat_id?: string
   ticker?: string
   step_name?: string
   step_index?: number
   content?: string
+  answer?: string
+  tool_name?: string
   error?: string
   headline?: string
   gate_passed?: boolean | null
@@ -28,6 +31,28 @@ export interface ResearchRequest {
   ticker: string
   phases?: string[] | null
   intake_only?: boolean
+}
+
+/**
+ * POST /api/chat body — ask one question about a ticker. The backend assembles the
+ * thesis/filings context server-side from the saved dossier, so only the ticker, the
+ * message, and (for multi-turn memory) a stable chat_id are sent. Omit chat_id to start fresh.
+ */
+export interface ChatRequest {
+  ticker: string
+  message: string
+  chat_id?: string
+}
+
+/**
+ * POST /api/journal/analyze body — ask the desk to critique one journaled trade. The trade
+ * payload travels from the client (the journal lives in Supabase, not the research backend);
+ * `portfolio` is optional aggregate context computed client-side.
+ */
+export interface TradeAnalysisRequest {
+  trade: Record<string, unknown>
+  question?: string
+  portfolio?: Record<string, unknown>
 }
 
 export interface GateReport {
