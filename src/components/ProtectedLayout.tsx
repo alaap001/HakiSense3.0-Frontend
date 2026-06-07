@@ -33,7 +33,7 @@ export function ProtectedLayout() {
     <div className="grain vignette relative min-h-screen bg-background">
       <div
         aria-hidden
-        className="app-aurora pointer-events-none fixed inset-x-0 top-0 z-0 h-[55vh] dark:hidden"
+        className="page-aura pointer-events-none fixed inset-x-0 top-0 z-0 h-[60vh]"
       />
       <AppNav />
       <div className="relative z-10">

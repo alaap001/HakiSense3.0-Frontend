@@ -19,7 +19,7 @@ export interface Strategy {
   user_id: string
   name: string
   description: string | null
-  /** Hex/token color for the strategy chip, e.g. "#F4763B". */
+  /** Hex/token color for the strategy chip, e.g. "#059669". */
   color: string | null
   created_at: string
 }

@@ -1,5 +1,123 @@
 # Changelog — HakiSense 3.0 Frontend
 
+## 2026-06-07 — App polish Batch A: Dashboard migrated to the shared system (checkpoint exemplar)
+
+**Task:** First page on the new app design system, so the shared look can be sanity-checked before cascading to the rest.
+
+**Changed:**
+- `src/pages/Dashboard.tsx` — outer wrapper → `<PageShell width="narrow">` (consistent width + staggered entrance); hand-rolled header → `<PageHeader>`; research-mode buttons → shared `<Pill>`; history loading → `<LoadingState>`; empty history → `<EmptyState>`. All research logic (`useResearchRun`, run/cancel, the live feed, result card, `?ticker=` prefill) preserved verbatim.
+- Added a **documented, scoped** `eslint-disable-next-line react-hooks/set-state-in-effect` on the `?ticker=` prefill's `setTicker`. This lint violation is **pre-existing** (the committed original had the same bare `setTicker` in that effect); it must stay an effect to re-prefill when the param changes while already on `/dashboard`, so it's documented rather than restructured.
+
+**Unchanged:** Behavior, routing, data, the run pipeline. Other pages (Batches B–D pending).
+**Verification:** `tsc --noEmit` rc=0 + `eslint` rc=0 (Dashboard now clean, including the documented disable).
+**Execution model:** unchanged. **Breaking changes:** none. **New dependencies:** none.
+
+## 2026-06-07 — App polish Pass 1: shared design system (PageShell / PageHeader / controls / states + premium aura & entrance)
+
+**Task:** Begin making every app page consistent + premium ("landing-flavored"). Approved approach: build shared primitives first, then cascade to the pages. This is Pass 1 — the primitives only; no page has adopted them yet (cascade is Batches A–D, next).
+
+**Why:** the app pages were already on the emerald tokens but inconsistent — three different widths (3xl/4xl/5xl), the tab-pill `triggerClass` copy-pasted in RunView + Journal (and a third mode-pill variant in Dashboard), hand-rolled headers with drifting spacing, plain `loading…`/empty text, and flatter than the new landing.
+
+**Changed (new shared primitives in `src/components/app/`):**
+- `PageShell.tsx` — standard page frame: unified width (`narrow`/`default`/`wide`, aligned to the nav), padding, and a staggered mount entrance for its children.
+- `PageHeader.tsx` — one header pattern (mono eyebrow + icon/badge, gradient title, subtitle, actions slot).
+- `controls.tsx` — shared `tabTriggerClass` (dedupes the copied tab style) + `<Pill>` (the segmented control).
+- `EmptyState.tsx` — polished empty state (glowing glass icon + title + hint + action).
+- `LoadingState.tsx` — consistent spinner row + a `Skeleton` block.
+- `StatTile.tsx` — refined metric tile (mono label + display value, pos/neg/brand tones).
+
+**Changed (edits):**
+- `src/index.css` — `.page-aura` (premium emerald+powder atmosphere, **light AND dusk**); `.app-stagger` entrance keyframes (uses `backwards` fill so no lingering transform breaks fixed/portaled children); reduced-motion disables it.
+- `src/components/ProtectedLayout.tsx` — mount `.page-aura` (replaces the light-only `app-aurora`) so every gated page gets atmosphere in both themes.
+
+**Unchanged:** No page/component has been migrated yet (Pass 2). Tokens, fonts, routes, data, logic, auth. `app-aurora` kept (still used by PublicLayout).
+**Verification:** `tsc --noEmit` rc=0 + `eslint` rc=0 (new `app/` primitives + ProtectedLayout).
+**Execution model:** unchanged. **Breaking changes:** none. **New dependencies:** none.
+
+## 2026-06-07 — Landing: one continuous backdrop (true seam-free continuity) + visible parallax + tighter hero
+
+**Task:** Screenshot review — the hero→pain transition still showed a tonal seam (hero had its own opaque sky that *ended*, pain had a darker wash), the parallax wasn't perceptible (only faint full-bleed layers moved), and the hero headline/sub were each 3 lines (too tall, no breathing room).
+
+**Changed:**
+- `src/index.css` — `.story-canvas` reworked into **one continuous page background**: a dawn (powder + emerald) anchored to the very top via px stops, settling into a flat mint that runs unbroken down the whole page — so there is *physically* no seam between acts. `.act-pain` reduced from a slate band to a barely-there cool tint (it was the grey step). `.sunset-sky` left as-is for the auth pages (now decoupled from the landing).
+- `src/pages/Landing.tsx` — the canvas is now `absolute inset-0` (page-anchored, scrolls) instead of `fixed`, so the dawn lives only at the top.
+- `src/components/landing/sections/HeroSection.tsx` — **removed the hero's separate sky** (it sits on the canvas dawn now → no edge to seam). Added two soft glow blobs (emerald + powder) that **parallax at different rates** for visible first-screen depth. Headline → tight **2 lines** ("Research took a weekend. / Now it takes one search.", responsive size so it doesn't overflow), sub → **2 lines**, with a larger gap (`mt-8`) for breathing room.
+- `src/components/landing/sections/PainSection.tsx` — the ghost "300" is now more visible (opacity 4%→6%) with more parallax travel, so the motion clearly reads.
+
+**Unchanged:** Arc/section order, palette tokens, fonts, count-up, walkthrough pin, auth pages (`.sunset-sky` untouched), routes, data.
+**Verification:** `tsc --noEmit` rc=0 + `eslint` rc=0 (Landing + Hero + Pain). Reduced-motion still skips parallax/reveals.
+**Execution model:** unchanged. **Breaking changes:** none. **New dependencies:** none.
+
+## 2026-06-07 — Landing: drop the warm hero horizon (seamless hero→pain) + more parallax depth
+
+**Task:** Screenshot review — the hero still ended in a warm peach/orange horizon band that broke the flow into the (now cool-green) Pain act, and the first few pages wanted more parallax depth.
+
+**Changed:**
+- `src/index.css` — `.sunset-sky` (light + dusk): **removed the warm orange/ember horizon radial** and settled the base gradient into the page-canvas tone (`#E9F3F1` light / `#09161F` dusk) so the hero fades straight into the Pain act with no seam. (Shared class — also cools the **Login/Signup** backdrops, which is consistent with the emerald-led brand; orange now survives only in the `spark` chips.)
+- `src/components/landing/sections/HeroSection.tsx` — the sky backdrop is now oversized (`-inset-y-24`) and **parallaxed** (`data-parallax`), so it drifts slower than the content for real depth on the first screen.
+- `src/components/landing/sections/TurnSection.tsx` — re-centered the bloom with `m-auto` (transform-free) and **parallaxed** it, so the Turn has motion too. (Transform-based centering was avoided because GSAP's `y` would clobber it.)
+
+**Unchanged:** Arc/section order, palette tokens, fonts, count-up + canvas work from the prior entry, walkthrough pin, routes, data.
+**Verification:** `tsc --noEmit` rc=0 + `eslint` rc=0 (Hero + Turn). Reduced-motion still skips all parallax.
+**Execution model:** unchanged. **Breaking changes:** none. **New dependencies:** none.
+
+## 2026-06-07 — Landing polish: continuity canvas + count-up numbers + visible motion (Hero→Pain→Turn)
+
+**Task:** Screenshot review of the rebuilt Landing — after the rich hero the page **hard-cut to flat grey-white** (lost continuity), the first 3 acts had no *perceptible* animation/parallax (my parallax was attached to near-invisible background washes), and the key figures sat there **stale** (no count-up, no emphasis, nothing for the eye to lock onto). Fixed all three without changing the arc.
+
+**Changed:**
+- `src/index.css` — NEW `.story-canvas`: a continuous brand backdrop (powder→emerald→mint, anchored blooms; light + dusk) so sections never fall back to flat white. **Strengthened** `.act-pain` (real cool-slate weight + a faint emerald sliver foreshadowing the Turn) and `.act-turn` (emerald bloom ~0.18→0.28 so "colour returns" actually reads). NEW `.mark` emerald highlighter for key words.
+- `src/components/landing/CountUp.tsx` — NEW: scroll-triggered number counter (0→value on enter, `once`); renders the final value at rest and for reduced-motion / no-JS, so it's never blank.
+- `src/pages/Landing.tsx` — mount the fixed `.story-canvas` behind a `relative z-10` content wrapper (proven layering pattern).
+- `src/components/landing/sections/PainSection.tsx` — cost strip is now the visual **peak**: `card-glass` tiles, icons, big **gradient count-up** numbers (300+, ~3 days) + a glow. Added a giant ultra-faint ghost "300" that **visibly parallaxes** (the clearest "you're scrolling a story" signal), `.mark` emphasis on key phrases, and accent lines that draw down as each beat enters.
+- `src/components/landing/sections/TurnSection.tsx` — stronger `sun-glow` + a scale/clip reveal on the headline so the pivot lands.
+
+**Unchanged:** The 7-beat arc / section order, palette tokens, fonts, Tailwind config, the walkthrough pin logic, other pages, routes, data. Hero search still routes as before.
+**Verification:** `tsc --noEmit` rc=0 + `eslint` rc=0 (Landing + CountUp + Pain + Turn). Reduced-motion path: numbers show final value, no parallax/reveals.
+**Execution model:** unchanged (frontend). **Breaking changes:** none. **New dependencies:** none.
+
+## 2026-06-07 — Landing: rebuilt as a story-driven scroll-journey (pain → solution → demo → payoff)
+
+**Task:** The Landing felt cluttered and "AI-made" — a feature catalogue where the eye had no focal point. Rebuild it as a narrated, Steve-Jobs-style scroll: show the reader's pain, reveal the grand solution, walk them through a quick demo as they scroll, and close on the payoff. Less text, fewer competing images, a real emotional arc — using reveals, parallax, and one pinned scene. Palette/tokens/fonts unchanged (emerald-led system kept).
+
+**The arc (9 catalogue sections → 7-beat journey):** Hero (one focal hook) → Pain (the real cost of research today — pages, lost weekend, money) → Turn ("so we built the analyst you could never afford", colour blooms back) → Walkthrough (the signature **pinned** demo, 4 beats the product demonstrates itself) → Journal (the free loyalty hook) → Principle (research, not recommendations) → Finale (names the pain, then takes it away → CTA).
+
+**What was decluttered:** the hero lost ~6 competing clusters (floating mockups, 4 ticker pills, 3 trust badges, example chips) down to headline + one line + search; the 3-card "how it works" and 6-card "what's inside" grids (9 equal cards = the AI-grid tell) are gone — their substance (thesis/findings/red-flags/live) is now *shown* inside the walkthrough beats; duplicated `sun-glow` blobs and ~40% of prose removed.
+
+**Changed:**
+- `src/pages/Landing.tsx` — rebuilt as a slim composition (~415 → ~95 lines); one `useGSAP` wires page-wide `[data-reveal]` (frictionless slide-up) + `[data-parallax]` (depth), reduced-motion–gated
+- `src/components/landing/sections/HeroSection.tsx` — NEW: decluttered hero, own entrance timeline + parallax-out
+- `src/components/landing/sections/PainSection.tsx` — NEW: quiet/desaturated pain act (`.act-pain`), reveal + parallax, cost strip (pages / days / ₹)
+- `src/components/landing/sections/TurnSection.tsx` — NEW: the grand-solution pivot, emerald `.act-turn` bloom
+- `src/components/landing/sections/WalkthroughSection.tsx` — NEW: the signature scene; CSS-`sticky` pin + ScrollTrigger reading progress to advance 4 beats (card swaps in place), with a stacked reduced-motion fallback
+- `src/components/landing/sections/JournalSection.tsx` — NEW: free-journal spotlight (reuses `JournalMock`)
+- `src/components/landing/sections/PrincipleSection.tsx` — NEW: "research, not recommendations" trust band (honesty discipline kept)
+- `src/components/landing/sections/FinaleSection.tsx` — NEW: payoff that ties back to the pain; the one deliberate `spark` chip
+- `src/components/landing/mockups.tsx` — ADD `AgentReadingMock` (the "reads the filings live" beat); existing mocks reused, not changed
+- `src/index.css` — ADD `.act-pain` + `.act-turn` story-act atmosphere washes (light + dusk). No token/font changes
+- `src/components/site/SiteFooter.tsx` — trimmed Product links to live anchors (`/#dossier`, `/#chat` removed — those are now walkthrough beats, not standalone sections; walkthrough gets `id="how"`)
+
+**Unchanged:** Palette tokens, fonts, Tailwind config. App/data pages, auth, routes, search behavior, backend. The hero search still opens the same ticker palette and routes exactly as before.
+**Verification:** `tsc --noEmit` rc=0 + `eslint` rc=0 (Landing + all new sections + mockups + footer).
+**Execution model:** unchanged (frontend; no async/concurrency touched). **Breaking changes:** none. **New dependencies:** none (gsap + ScrollTrigger already present).
+
+## 2026-06-07 — REBALANCE: Emerald-led palette (orange demoted to a "spark")
+
+**Task:** Feedback — the sunset build read "too orangy / AI-generated", and a finance product should lead with green. Rebalanced to an **emerald-led** palette: money-emerald is now the primary/brand workhorse (buttons, icons, active states, heading gradient, glows), powder blue stays the cool support, and orange survives **only as a rare `spark`** (its own token) — the two urgency chips, one mockup strength-bar, and a thin warm horizon line in the hero. No layout/logic changes; the token system means it cascades to every page.
+
+**Root causes of the "orangy" feel, fixed:** (1) the warm *cream paper* itself — `--background`/`--card` cooled from warm cream to a faint mint-white, foreground/borders/glass cooled to neutral; (2) one accent on everything — the `violet` Tailwind alias + `--primary`/`--brand`/`--ring` repointed orange→**emerald**, and `.text-gradient`/`.btn-primary`/`.glow-violet*`/`.app-aurora`/`boxShadow.glow` re-greened; (3) the orange hero sky — `.sunset-sky` reworked to a cool teal-green dawn with a single thin warm horizon, `.sun-glow` → emerald-teal.
+
+**Changed:**
+- `src/index.css` — both token sets → emerald-led + cooled paper; new `--spark`/`--spark-strong` tokens; re-greened every effect class (`.text-gradient`, `.btn-primary`, `.glow-violet*`, `.app-aurora`, `.sunset-sky`, `.sun-glow`, `.hero-aurora`, `.border-violet`, scrollbar)
+- `tailwind.config.js` — `violet` scale → emerald; add `spark` color; `boxShadow.glow/-lg` → emerald
+- `src/pages/Landing.tsx` — the two urgency chips → `spark` (the one warm pop)
+- `src/components/landing/mockups.tsx` — dossier middle strength-bar → `spark` (green/orange/rose spread)
+- `src/types/journal.ts` — JSDoc color example → emerald
+
+**Unchanged:** all layouts/logic; auth + app chrome (recolor automatically). Backend.
+**Verification:** `tsc --noEmit` rc=0 + `eslint` rc=0; `spark` appears in only ~11 spots (sparing by design); no old sunset-orange hex remain outside the intentional hero-horizon rgba.
+**Execution model:** unchanged. **Breaking changes:** none. **New dependencies:** none.
+
 ## 2026-06-07 — POLISH: Sunset rebrand cohesion pass (auth + app chrome)
 
 **Task:** Complete the sunset transformation on the surfaces the global token swap recolored but didn't *elevate*. A full survey confirmed the data pages were already done (Dashboard/Journal already use the sunset `text-gradient`; `ProtectedLayout`/`PublicLayout` already paint the recolored `.app-aurora`; no off-brand built-in palette classes, no stray hexes, no old font literals anywhere). Only the auth front-door and the app nav were still on the old generic treatment.

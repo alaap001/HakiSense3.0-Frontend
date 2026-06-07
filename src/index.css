@@ -7,107 +7,112 @@
 @layer base {
   :root {
     /* ───────────────────────── DAYBREAK (light, default) ─────────────────────────
-       Warm cream "paper" under a powder-blue sky, with a sunset-orange accent and a
-       dusk-navy ink. The whole app reads off these tokens, so this palette cascades
-       to every page. */
-    --background: 32 100% 97%;
-    --foreground: 212 44% 16%;
-    --card: 40 60% 99%;
-    --card-foreground: 212 44% 16%;
-    --popover: 38 70% 99%;
-    --popover-foreground: 212 44% 16%;
-    --primary: 18 89% 59%;
+       Emerald-led finance palette. A cool faint-mint "paper" with dusk-navy ink, a money
+       emerald as the primary, powder blue as the cool support, and orange kept only as a
+       rare warm "spark". The whole app reads off these tokens, so it cascades everywhere. */
+    --background: 150 33% 98%;
+    --foreground: 212 40% 15%;
+    --card: 150 30% 99%;
+    --card-foreground: 212 40% 15%;
+    --popover: 150 30% 99%;
+    --popover-foreground: 212 40% 15%;
+    --primary: 161 94% 30%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 28 60% 92%;
-    --secondary-foreground: 214 40% 22%;
-    --muted: 28 40% 92%;
-    --muted-foreground: 213 22% 42%;
-    --accent: 28 65% 91%;
-    --accent-foreground: 212 44% 18%;
-    --destructive: 0 74% 48%;
+    --secondary: 150 20% 92%;
+    --secondary-foreground: 200 24% 22%;
+    --muted: 150 18% 92%;
+    --muted-foreground: 205 16% 42%;
+    --accent: 152 30% 91%;
+    --accent-foreground: 163 40% 18%;
+    --destructive: 350 74% 47%;
     --destructive-foreground: 0 0% 100%;
-    --border: 28 32% 86%;
-    --input: 28 32% 86%;
-    --ring: 18 89% 59%;
+    --border: 195 22% 87%;
+    --input: 195 22% 87%;
+    --ring: 161 94% 30%;
     --radius: 0.875rem;
 
     /* Derived theme tokens (mapped to Tailwind colors + used by .glass/.card-glass). */
-    --hairline: rgba(22, 38, 58, 0.12);
-    --hairline-strong: rgba(22, 38, 58, 0.20);
-    --surface: rgba(22, 38, 58, 0.04);
-    --surface-strong: rgba(22, 38, 58, 0.08);
-    --panel: rgba(22, 38, 58, 0.05);
-    /* Readable accent text/icon — deep sunset orange on cream. */
-    --brand: 16 78% 50%;
-    --brand-strong: 18 88% 42%;
-    /* Powder-blue secondary accent (readable on cream). */
+    --hairline: rgba(20, 40, 50, 0.12);
+    --hairline-strong: rgba(20, 40, 50, 0.20);
+    --surface: rgba(20, 40, 50, 0.04);
+    --surface-strong: rgba(20, 40, 50, 0.08);
+    --panel: rgba(20, 40, 50, 0.05);
+    /* Readable accent text/icon — deep emerald on the mint paper. */
+    --brand: 163 94% 24%;
+    --brand-strong: 163 88% 20%;
+    /* Powder-blue cool support. */
     --sky: 199 52% 45%;
     --sky-strong: 199 53% 36%;
-    --pos: 162 90% 26%;
-    --neg: 345 80% 45%;
-    --warn: 30 90% 38%;
+    /* Orange "spark" — the rare warm accent. Used sparingly, never as the workhorse. */
+    --spark: 25 86% 55%;
+    --spark-strong: 22 78% 47%;
+    --pos: 158 80% 29%;
+    --neg: 347 80% 47%;
+    --warn: 32 88% 40%;
 
-    --glass-bg: rgba(255, 251, 246, 0.86);
-    --glass-border: rgba(22, 38, 58, 0.09);
-    --glass-strong-bg: rgba(255, 251, 246, 0.93);
-    --glass-strong-border: rgba(22, 38, 58, 0.12);
-    --card-glass-shadow: 0 16px 44px -16px rgba(20, 30, 55, 0.22), 0 2px 6px rgba(20, 30, 55, 0.06);
-    --vignette: rgba(22, 38, 58, 0.05);
+    --glass-bg: rgba(250, 253, 251, 0.86);
+    --glass-border: rgba(20, 40, 50, 0.09);
+    --glass-strong-bg: rgba(250, 253, 251, 0.93);
+    --glass-strong-border: rgba(20, 40, 50, 0.12);
+    --card-glass-shadow: 0 16px 44px -16px rgba(16, 40, 45, 0.20), 0 2px 6px rgba(16, 40, 45, 0.06);
+    --vignette: rgba(20, 40, 50, 0.05);
     --grain-opacity: 0.025;
-    --btn-secondary-bg: rgba(22, 38, 58, 0.05);
-    --btn-secondary-border: rgba(22, 38, 58, 0.10);
-    --btn-secondary-hover-bg: rgba(22, 38, 58, 0.08);
-    --btn-secondary-hover-border: rgba(22, 38, 58, 0.18);
+    --btn-secondary-bg: rgba(20, 40, 50, 0.05);
+    --btn-secondary-border: rgba(20, 40, 50, 0.10);
+    --btn-secondary-hover-bg: rgba(20, 40, 50, 0.08);
+    --btn-secondary-hover-border: rgba(20, 40, 50, 0.18);
   }
 
   .dark {
     /* ───────────────────────────── DUSK (dark) ─────────────────────────────
-       The sky a few minutes after the sun drops: deep navy-indigo, an ember-orange
-       horizon glow and powder-blue highlights, with warm off-white text. */
-    --background: 216 48% 8%;
-    --foreground: 30 36% 92%;
-    --card: 214 44% 12%;
-    --card-foreground: 30 36% 92%;
-    --popover: 214 44% 11%;
-    --popover-foreground: 30 36% 92%;
-    --primary: 18 100% 67%;
+       Deep cool navy with an emerald lead, powder-blue highlights, a thin ember-orange
+       spark on the horizon, and a cool off-white ink. */
+    --background: 214 46% 8%;
+    --foreground: 200 20% 93%;
+    --card: 214 42% 12%;
+    --card-foreground: 200 20% 93%;
+    --popover: 214 42% 11%;
+    --popover-foreground: 200 20% 93%;
+    --primary: 160 84% 39%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 215 30% 18%;
-    --secondary-foreground: 30 36% 92%;
-    --muted: 215 28% 17%;
-    --muted-foreground: 212 16% 68%;
-    --accent: 215 32% 22%;
-    --accent-foreground: 30 36% 94%;
-    --destructive: 0 84% 60%;
+    --secondary: 205 28% 18%;
+    --secondary-foreground: 200 20% 93%;
+    --muted: 205 26% 17%;
+    --muted-foreground: 200 14% 70%;
+    --accent: 200 30% 21%;
+    --accent-foreground: 200 20% 94%;
+    --destructive: 350 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 214 26% 20%;
-    --input: 214 26% 20%;
-    --ring: 18 100% 67%;
+    --border: 205 26% 20%;
+    --input: 205 26% 20%;
+    --ring: 160 84% 39%;
 
-    --hairline: rgba(244, 238, 230, 0.10);
-    --hairline-strong: rgba(244, 238, 230, 0.22);
-    --surface: rgba(244, 238, 230, 0.04);
-    --surface-strong: rgba(244, 238, 230, 0.10);
-    --panel: rgba(6, 12, 24, 0.40);
-    --brand: 26 100% 74%;
-    --brand-strong: 30 100% 92%;
+    --hairline: rgba(226, 240, 245, 0.10);
+    --hairline-strong: rgba(226, 240, 245, 0.22);
+    --surface: rgba(226, 240, 245, 0.04);
+    --surface-strong: rgba(226, 240, 245, 0.10);
+    --panel: rgba(6, 14, 22, 0.40);
+    --brand: 158 64% 56%;
+    --brand-strong: 153 62% 76%;
     --sky: 202 55% 70%;
     --sky-strong: 200 70% 82%;
+    --spark: 25 100% 66%;
+    --spark-strong: 26 100% 74%;
     --pos: 158 64% 52%;
-    --neg: 351 95% 71%;
+    --neg: 351 90% 71%;
     --warn: 38 96% 60%;
 
-    --glass-bg: rgba(13, 22, 38, 0.55);
-    --glass-border: rgba(244, 238, 230, 0.08);
-    --glass-strong-bg: rgba(13, 22, 38, 0.78);
-    --glass-strong-border: rgba(244, 238, 230, 0.12);
+    --glass-bg: rgba(13, 24, 38, 0.55);
+    --glass-border: rgba(226, 240, 245, 0.08);
+    --glass-strong-bg: rgba(13, 24, 38, 0.78);
+    --glass-strong-border: rgba(226, 240, 245, 0.12);
     --card-glass-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
     --vignette: rgba(3, 8, 16, 0.6);
     --grain-opacity: 0.04;
-    --btn-secondary-bg: rgba(244, 238, 230, 0.08);
-    --btn-secondary-border: rgba(244, 238, 230, 0.15);
-    --btn-secondary-hover-bg: rgba(244, 238, 230, 0.12);
-    --btn-secondary-hover-border: rgba(244, 238, 230, 0.25);
+    --btn-secondary-bg: rgba(226, 240, 245, 0.08);
+    --btn-secondary-border: rgba(226, 240, 245, 0.15);
+    --btn-secondary-hover-bg: rgba(226, 240, 245, 0.12);
+    --btn-secondary-hover-border: rgba(226, 240, 245, 0.25);
   }
 }
 
@@ -159,14 +164,14 @@
   box-shadow: var(--card-glass-shadow);
 }
 
-/* Sunset glow (kept under the legacy .glow-violet* names so existing markup recolors
-   for free — the whole app moved off violet to the sunset accent). */
+/* Emerald glow (kept under the legacy .glow-violet* names so existing markup recolors for
+   free — the brand accent is now emerald, not orange). */
 .glow-violet {
-  box-shadow: 0 0 40px rgba(244, 118, 59, 0.30), 0 0 80px rgba(244, 118, 59, 0.15);
+  box-shadow: 0 0 40px rgba(5, 150, 105, 0.30), 0 0 80px rgba(5, 150, 105, 0.15);
 }
 
 .glow-violet-subtle {
-  box-shadow: 0 0 20px rgba(244, 118, 59, 0.22);
+  box-shadow: 0 0 20px rgba(5, 150, 105, 0.22);
 }
 
 /* Powder-blue glow, for the cooler accents. */
@@ -174,68 +179,174 @@
   box-shadow: 0 0 28px rgba(79, 163, 204, 0.28);
 }
 
-/* Text gradient — a sunset sweep (orange → rose). Light theme uses deeper, saturated
-   stops so it stays readable on the cream paper; dusk keeps it bright. */
+/* Text gradient — an emerald → teal sweep (money-green into growth). Light uses deep,
+   saturated stops for readability on the mint paper; dusk keeps it bright. */
 .text-gradient {
-  background: linear-gradient(120deg, #F4763B 0%, #EC4D7E 100%);
+  background: linear-gradient(120deg, #059669 0%, #0D9488 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .dark .text-gradient {
-  background: linear-gradient(120deg, #FFB27A 0%, #FF8A5B 45%, #FF7AB0 100%);
+  background: linear-gradient(120deg, #34D399 0%, #2DD4BF 55%, #5EEAD4 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Sunset accent border (kept under .border-violet so existing markup recolors). */
+/* Emerald accent border (kept under .border-violet so existing markup recolors). */
 .border-violet {
-  border-color: rgba(244, 118, 59, 0.40);
+  border-color: rgba(5, 150, 105, 0.40);
 }
 
-/* App/public-page atmosphere — light theme only. A soft sunset wash at the top so data
-   pages (Dashboard, RunView, …) read as warm premium paper, not a flat white void.
-   Dark app pages keep their flat-dusk + glass look (this layer is hidden there). */
+/* App/public-page atmosphere — light theme only. A soft emerald wash at the top so data
+   pages (Dashboard, RunView, …) read as fresh premium paper, not a flat white void. Dark
+   app pages keep their flat-dusk + glass look (this layer is hidden there). */
 .app-aurora {
   background:
-    radial-gradient(52rem 30rem at 50% -10%, rgba(244, 118, 59, 0.12), transparent 62%),
+    radial-gradient(52rem 30rem at 50% -10%, rgba(5, 150, 105, 0.12), transparent 62%),
     radial-gradient(34rem 26rem at 88% 2%, rgba(79, 163, 204, 0.10), transparent 60%);
 }
 
-/* Landing hero atmosphere — a literal sunset sky. Light: powder-blue overhead melting
-   through peach into a warm cream horizon with an orange bloom. Dusk: deep navy with an
-   ember horizon. Used as a fixed backdrop behind the hero. */
+/* Premium app atmosphere — a soft emerald + powder wash behind every gated page,
+   in light AND dusk (the older .app-aurora was light-only). Mounted once in
+   ProtectedLayout so the whole app reads as crafted paper, not a flat panel. */
+.page-aura {
+  background:
+    radial-gradient(58rem 34rem at 12% -8%, rgba(16, 185, 129, 0.10), transparent 60%),
+    radial-gradient(54rem 32rem at 90% -2%, rgba(79, 163, 204, 0.10), transparent 60%);
+}
+
+.dark .page-aura {
+  background:
+    radial-gradient(58rem 34rem at 12% -8%, rgba(16, 185, 129, 0.13), transparent 60%),
+    radial-gradient(54rem 32rem at 90% -2%, rgba(40, 90, 120, 0.20), transparent 60%);
+}
+
+/* App page entrance — direct children of a PageShell stagger up on mount. Uses
+   `backwards` fill (no lingering transform, so fixed/portaled children stay put). */
+@keyframes appEnter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.app-stagger > * {
+  animation: appEnter 0.55s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+.app-stagger > *:nth-child(1) { animation-delay: 0.03s; }
+.app-stagger > *:nth-child(2) { animation-delay: 0.09s; }
+.app-stagger > *:nth-child(3) { animation-delay: 0.15s; }
+.app-stagger > *:nth-child(4) { animation-delay: 0.21s; }
+.app-stagger > *:nth-child(5) { animation-delay: 0.27s; }
+.app-stagger > *:nth-child(n+6) { animation-delay: 0.32s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .app-stagger > * {
+    animation: none;
+  }
+}
+
+/* Landing hero atmosphere — a cool teal-green dawn. Light: powder-blue overhead → mint,
+   an emerald base glow, settling into the page canvas tone so the hero flows straight
+   into the Pain act (no warm horizon seam). Dusk: deep navy settling into the canvas navy. */
 .sunset-sky {
   background:
-    radial-gradient(120% 80% at 50% 6%, rgba(159, 213, 240, 0.85) 0%, transparent 55%),
-    radial-gradient(130% 72% at 50% 120%, rgba(255, 138, 91, 0.55) 0%, rgba(255, 194, 161, 0.40) 38%, transparent 74%),
-    linear-gradient(180deg, #DCEFF7 0%, #FBE6D6 46%, #FFF1E6 78%, #FFF8F1 100%);
+    radial-gradient(120% 80% at 50% 6%, rgba(159, 213, 240, 0.65) 0%, transparent 55%),
+    radial-gradient(120% 62% at 50% 122%, rgba(16, 185, 129, 0.24) 0%, transparent 70%),
+    linear-gradient(180deg, #E3F1F7 0%, #E9F5EF 46%, #ECF6F1 76%, #E9F3F1 100%);
 }
 
 .dark .sunset-sky {
   background:
-    radial-gradient(120% 80% at 50% 4%, rgba(46, 78, 122, 0.55) 0%, transparent 55%),
-    radial-gradient(135% 72% at 50% 122%, rgba(255, 138, 91, 0.45) 0%, rgba(255, 138, 91, 0.12) 40%, transparent 74%),
-    linear-gradient(180deg, #08111F 0%, #0C1830 52%, #14233A 100%);
+    radial-gradient(120% 80% at 50% 4%, rgba(40, 90, 120, 0.50) 0%, transparent 55%),
+    radial-gradient(125% 60% at 50% 122%, rgba(16, 185, 129, 0.20) 0%, transparent 70%),
+    linear-gradient(180deg, #08131F 0%, #0B1C28 52%, #09161F 100%);
 }
 
-/* The "sun" — a soft warm bloom you can place behind the hero copy. */
+/* Soft emerald-teal bloom you can place behind hero copy / spotlights. */
 .sun-glow {
-  background: radial-gradient(circle at center, rgba(255, 186, 130, 0.85) 0%, rgba(255, 138, 91, 0.42) 32%, transparent 70%);
+  background: radial-gradient(circle at center, rgba(16, 185, 129, 0.50) 0%, rgba(13, 148, 136, 0.26) 32%, transparent 70%);
 }
 
 .dark .sun-glow {
-  background: radial-gradient(circle at center, rgba(255, 150, 96, 0.55) 0%, rgba(255, 122, 70, 0.28) 34%, transparent 72%);
+  background: radial-gradient(circle at center, rgba(52, 211, 153, 0.40) 0%, rgba(13, 148, 136, 0.20) 34%, transparent 72%);
 }
 
 /* Hero atmosphere alias — light theme only (kept for any older references). */
 .hero-aurora {
   background:
-    radial-gradient(60rem 44rem at 80% -12%, rgba(255, 138, 91, 0.18), transparent 58%),
+    radial-gradient(60rem 44rem at 80% -12%, rgba(16, 185, 129, 0.16), transparent 58%),
     radial-gradient(52rem 40rem at -8% 14%, rgba(159, 213, 240, 0.20), transparent 55%),
-    radial-gradient(44rem 38rem at 50% 116%, rgba(244, 118, 59, 0.12), transparent 60%);
+    radial-gradient(44rem 38rem at 50% 116%, rgba(5, 150, 105, 0.12), transparent 60%);
+}
+
+/* ── Story-act atmospheres (Landing scroll-journey) ──────────────────────────
+   The Landing is a narrated scroll: a quiet, heavy "pain" act, then an emerald
+   "turn" that blooms back into colour (the emotional release). These washes sit
+   behind each act's content, layered over the mint paper / dusk navy. */
+
+/* Continuous page canvas — the Landing's living backdrop. Carries the brand
+   tones gently down the whole page so sections never fall back to flat white;
+   each act then layers its own mood (pain slate / turn bloom) on top of this. */
+.story-canvas {
+  background:
+    radial-gradient(90rem 46rem at 50% -8%, rgba(159, 213, 240, 0.55), transparent 58%),
+    radial-gradient(70rem 40rem at 85% 3%, rgba(16, 185, 129, 0.20), transparent 60%),
+    radial-gradient(60rem 40rem at 8% 9%, rgba(79, 163, 204, 0.16), transparent 60%),
+    linear-gradient(180deg, #E3F1F7 0px, #E7F3EE 480px, #EAF4F0 920px, #EAF4F0 100%);
+}
+
+.dark .story-canvas {
+  background:
+    radial-gradient(90rem 46rem at 50% -8%, rgba(40, 90, 120, 0.48), transparent 58%),
+    radial-gradient(70rem 40rem at 85% 3%, rgba(16, 185, 129, 0.18), transparent 60%),
+    radial-gradient(60rem 40rem at 8% 9%, rgba(40, 90, 120, 0.24), transparent 60%),
+    linear-gradient(180deg, #08131F 0px, #0A1825 480px, #0A1622 920px, #0A1622 100%);
+}
+
+/* PAIN — a faint cool quietness only. Kept very subtle (no hard band) so it tints
+   the continuous canvas without ever creating a visible seam under the hero. */
+.act-pain {
+  background:
+    radial-gradient(82% 60% at 50% 46%, rgba(70, 92, 110, 0.10), transparent 78%);
+}
+
+.dark .act-pain {
+  background:
+    radial-gradient(82% 60% at 50% 46%, rgba(10, 26, 44, 0.40), transparent 78%);
+}
+
+/* TURN — emerald bloom: colour floods back, the release after the heavy act. */
+.act-turn {
+  background:
+    radial-gradient(62% 66% at 50% 50%, rgba(16, 185, 129, 0.28), transparent 68%),
+    radial-gradient(44% 46% at 50% 42%, rgba(13, 148, 136, 0.20), transparent 64%);
+}
+
+.dark .act-turn {
+  background:
+    radial-gradient(62% 66% at 50% 50%, rgba(16, 185, 129, 0.30), transparent 68%),
+    radial-gradient(44% 46% at 50% 42%, rgba(45, 212, 191, 0.18), transparent 64%);
+}
+
+/* Highlighter — a soft emerald marker under key words so the eye catches them. */
+.mark {
+  background-image: linear-gradient(180deg, transparent 60%, rgba(16, 185, 129, 0.24) 60%);
+  border-radius: 2px;
+  padding: 0 0.06em;
+}
+
+.dark .mark {
+  background-image: linear-gradient(180deg, transparent 60%, rgba(52, 211, 153, 0.28) 60%);
 }
 
 /* Background vignette */
@@ -262,13 +373,13 @@
 /* Button styles */
 .btn-primary {
   @apply px-6 py-3 rounded-full font-medium transition-all duration-300;
-  background: linear-gradient(135deg, #FF8A5B 0%, #F4763B 52%, #E2592A 100%);
-  box-shadow: 0 10px 30px rgba(244, 118, 59, 0.38);
+  background: linear-gradient(135deg, #10B981 0%, #059669 52%, #047857 100%);
+  box-shadow: 0 10px 30px rgba(5, 150, 105, 0.36);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 14px 40px rgba(244, 118, 59, 0.50);
+  box-shadow: 0 14px 40px rgba(5, 150, 105, 0.48);
 }
 
 .btn-secondary {
@@ -370,12 +481,12 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(244, 118, 59, 0.30);
+  background: rgba(5, 150, 105, 0.30);
   border-radius: 3px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(244, 118, 59, 0.50);
+  background: rgba(5, 150, 105, 0.50);
 }
 
 /* Animation utilities */

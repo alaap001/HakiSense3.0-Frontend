@@ -1,6 +1,8 @@
 import {
   ArrowUpRight,
+  Check,
   FileText,
+  Loader2,
   ShieldCheck,
   Sparkles,
   TrendingUp,
@@ -42,7 +44,7 @@ export function DossierMock({ className }: { className?: string }) {
       <div className="mt-4 space-y-2.5">
         {[
           { label: "New-energy capex funded", val: 82, tone: "pos" as const },
-          { label: "Retail margin durable", val: 64, tone: "brand" as const },
+          { label: "Retail margin durable", val: 64, tone: "spark" as const },
           { label: "Telco ARPU inflects", val: 38, tone: "neg" as const },
         ].map((p) => (
           <div key={p.label}>
@@ -55,7 +57,7 @@ export function DossierMock({ className }: { className?: string }) {
                 className={cn(
                   "h-full rounded-full",
                   p.tone === "pos" && "bg-pos",
-                  p.tone === "brand" && "bg-brand",
+                  p.tone === "spark" && "bg-spark",
                   p.tone === "neg" && "bg-neg",
                 )}
                 style={{ width: `${p.val}%` }}
@@ -167,6 +169,79 @@ export function JournalMock({ className }: { className?: string }) {
           <p className="mt-0.5 font-display text-lg font-bold text-pos">+1.8R</p>
         </div>
       </div>
+    </div>
+  )
+}
+
+/**
+ * "It reads everything, live" — the walkthrough beat where the agent tears through
+ * a company's filings. Shows a short source list streaming from done → reading →
+ * queued, so the visitor sees the machine actually working.
+ */
+export function AgentReadingMock({ className }: { className?: string }) {
+  const docs = [
+    { name: "Annual Report FY24", meta: "312 pages", state: "done" as const },
+    { name: "Q4 Earnings Call", meta: "transcript", state: "done" as const },
+    { name: "Investor Presentation", meta: "48 slides", state: "reading" as const },
+    { name: "Credit Rating Note", meta: "ICRA", state: "queued" as const },
+  ]
+  return (
+    <div className={cn("card-glass w-[20rem] max-w-full overflow-hidden rounded-2xl p-5", className)}>
+      <div className="flex items-center justify-between border-b border-hairline pb-3">
+        <div className="flex items-center gap-2">
+          <span className="grid size-7 place-items-center rounded-lg bg-brand/12 text-brand">
+            <Loader2 className="size-3.5 animate-spin" />
+          </span>
+          <div className="leading-tight">
+            <p className="font-display text-sm font-semibold text-text-primary">Reading RELIANCE</p>
+            <p className="font-mono text-[9px] text-text-secondary">12 lenses · live</p>
+          </div>
+        </div>
+        <span className="flex items-center gap-1 font-mono text-[9px] text-pos">
+          <span className="size-1.5 animate-pulse-glow rounded-full bg-pos" />
+          live
+        </span>
+      </div>
+
+      <div className="mt-3 space-y-2">
+        {docs.map((d) => (
+          <div key={d.name} className="flex items-center gap-2.5 rounded-xl border border-hairline bg-surface px-3 py-2">
+            <span
+              className={cn(
+                "grid size-6 shrink-0 place-items-center rounded-lg",
+                d.state === "done" && "bg-pos/15 text-pos",
+                d.state === "reading" && "bg-brand/12 text-brand",
+                d.state === "queued" && "bg-surface-strong text-text-secondary/60",
+              )}
+            >
+              {d.state === "done" ? (
+                <Check className="size-3" />
+              ) : d.state === "reading" ? (
+                <Loader2 className="size-3 animate-spin" />
+              ) : (
+                <FileText className="size-3" />
+              )}
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-[11px] font-medium text-text-primary">{d.name}</p>
+              {d.state === "reading" ? (
+                <div className="mt-1 h-1 overflow-hidden rounded-full bg-surface-strong">
+                  <div className="h-full w-3/5 animate-pulse-glow rounded-full bg-brand" />
+                </div>
+              ) : (
+                <p className="font-mono text-[9px] text-text-secondary">{d.meta}</p>
+              )}
+            </div>
+            <span className="font-mono text-[8px] uppercase tracking-wider text-text-secondary/60">
+              {d.state}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      <p className="mt-3 font-mono text-[9px] text-text-secondary">
+        …cross-checking footnotes &amp; related-party tables
+      </p>
     </div>
   )
 }

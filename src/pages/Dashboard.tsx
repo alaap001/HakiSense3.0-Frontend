@@ -11,6 +11,11 @@ import {
   Square,
 } from "lucide-react"
 
+import { EmptyState } from "@/components/app/EmptyState"
+import { LoadingState } from "@/components/app/LoadingState"
+import { PageHeader } from "@/components/app/PageHeader"
+import { PageShell } from "@/components/app/PageShell"
+import { Pill } from "@/components/app/controls"
 import { TickerCombobox } from "@/components/search/TickerCombobox"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -18,7 +23,6 @@ import { Card, CardContent } from "@/components/ui/card"
 import { useAuth } from "@/contexts/AuthContext"
 import { useResearchRun } from "@/hooks/useResearchRun"
 import { listRuns } from "@/lib/agentos"
-import { cn } from "@/lib/utils"
 import type { ResearchRequest, RunListItem } from "@/types/api"
 
 type Mode = "intake" | "scope" | "full"
@@ -51,6 +55,9 @@ export default function Dashboard() {
   useEffect(() => {
     const t = searchParams.get("ticker")
     if (t) {
+      // Sync the input to the URL (set by the search palette). It must stay an
+      // effect so a new ?ticker= prefills even while already on /dashboard.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setTicker(t.toUpperCase())
       searchParams.delete("ticker")
       setSearchParams(searchParams, { replace: true })
@@ -90,15 +97,16 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="relative z-10 mx-auto w-full max-w-3xl px-6 py-12">
-      <p className="micro-label">Equity Research Engine</p>
-      <h1 className="mt-3 font-display text-3xl font-semibold tracking-tight text-text-primary">
-        Deep research, <span className="text-gradient">not recommendations.</span>
-      </h1>
-      <p className="mt-3 max-w-xl text-sm leading-relaxed text-text-secondary">
-        Enter a ticker and watch the dossier assemble live — thesis, findings, scenarios
-        and risks, each backed by evidence.
-      </p>
+    <PageShell width="narrow">
+      <PageHeader
+        eyebrow="Equity Research Engine"
+        title={
+          <>
+            Deep research, <span className="text-gradient">not recommendations.</span>
+          </>
+        }
+        subtitle="Enter a ticker and watch the dossier assemble live — thesis, findings, scenarios and risks, each backed by evidence."
+      />
 
       {/* Run console — relative z-20 lifts it (and the combobox dropdown, which
           overflows the card) above the Recent-runs section below; .card-glass's
@@ -107,21 +115,15 @@ export default function Dashboard() {
         <CardContent className="p-5">
           <div className="mb-3 flex flex-wrap gap-2">
             {MODES.map((m) => (
-              <button
+              <Pill
                 key={m.id}
-                type="button"
+                active={mode === m.id}
                 onClick={() => setMode(m.id)}
                 disabled={running}
                 title={m.hint}
-                className={cn(
-                  "rounded-full border px-3 py-1.5 text-xs transition-colors disabled:opacity-50",
-                  mode === m.id
-                    ? "border-violet bg-violet/15 text-brand-strong"
-                    : "border-hairline text-text-secondary hover:border-hairline-strong",
-                )}
               >
                 {m.label}
-              </button>
+              </Pill>
             ))}
           </div>
 
@@ -246,10 +248,7 @@ export default function Dashboard() {
           Recent runs
         </h2>
         {runs.isLoading ? (
-          <div className="flex items-center gap-2 text-xs text-text-secondary">
-            <Loader2 className="size-3.5 animate-spin" />
-            loading…
-          </div>
+          <LoadingState label="Loading recent runs…" />
         ) : visibleRuns.length > 0 ? (
           <ul className="space-y-2">
             {visibleRuns.map((r) => (
@@ -272,11 +271,13 @@ export default function Dashboard() {
             ))}
           </ul>
         ) : (
-          <p className="text-xs text-text-secondary/70">
-            No completed dossiers yet — run a Scope or Full research above to see it here.
-          </p>
+          <EmptyState
+            icon={Clock}
+            title="No dossiers yet"
+            description="Run a Scope or Full research above and your completed dossiers will appear here."
+          />
         )}
       </section>
-    </div>
+    </PageShell>
   )
 }

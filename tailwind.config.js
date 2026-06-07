@@ -40,23 +40,23 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Sunset-orange accent scale. NOTE: still named `violet` so the ~34 files that
-        // use `bg-violet/15`, `text-violet`, `border-violet`, `ring-violet/…` recolor to
-        // sunset for free (no per-file edits). The name is now a misnomer — a later
-        // mechanical `violet`→`sunset` rename is a clean follow-up. New code uses
-        // `brand` / `sky` (token-backed) instead.
+        // Emerald accent scale. NOTE: still named `violet` so the ~34 files that use
+        // `bg-violet/15`, `text-violet`, `border-violet`, `ring-violet/…` recolor to
+        // emerald for free (no per-file edits). The name is a misnomer — a later
+        // mechanical `violet`→`brand` rename is a clean follow-up. New code uses
+        // `brand` / `sky` / `spark` (token-backed) instead.
         violet: {
-          DEFAULT: '#F4763B',
-          50: '#FFF4EC',
-          100: '#FFE6D6',
-          200: '#FFC9A8',
-          300: '#FFA877',
-          400: '#FF8A5B',
-          500: '#F4763B',
-          600: '#E2592A',
-          700: '#C2410C',
-          800: '#9A3412',
-          900: '#7C2D12',
+          DEFAULT: '#059669',
+          50: '#ECFDF5',
+          100: '#D1FAE5',
+          200: '#A7F3D0',
+          300: '#6EE7B7',
+          400: '#34D399',
+          500: '#10B981',
+          600: '#059669',
+          700: '#047857',
+          800: '#065F46',
+          900: '#064E3B',
         },
         dark: {
           DEFAULT: '#05050B',
@@ -68,15 +68,20 @@ module.exports = {
           primary: 'hsl(var(--foreground) / <alpha-value>)',
           secondary: 'hsl(var(--muted-foreground) / <alpha-value>)',
         },
-        // Readable accent text/icon color — deep sunset orange (light) ↔ warm amber (dark).
+        // Readable accent text/icon color — deep emerald (light) ↔ bright emerald (dark).
         brand: {
           DEFAULT: 'hsl(var(--brand) / <alpha-value>)',
           strong: 'hsl(var(--brand-strong) / <alpha-value>)',
         },
-        // Powder-blue secondary accent — the cool half of the sunset palette.
+        // Powder-blue cool support accent.
         sky: {
           DEFAULT: 'hsl(var(--sky) / <alpha-value>)',
           strong: 'hsl(var(--sky-strong) / <alpha-value>)',
+        },
+        // Orange "spark" — the rare warm accent (urgency chips, hero horizon). Use sparingly.
+        spark: {
+          DEFAULT: 'hsl(var(--spark) / <alpha-value>)',
+          strong: 'hsl(var(--spark-strong) / <alpha-value>)',
         },
         // Semantic accents — flip to readable deep shades on light, bright on dark.
         pos: 'hsl(var(--pos) / <alpha-value>)',
@@ -112,8 +117,8 @@ module.exports = {
         xs: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
         card: '0 24px 80px rgba(0, 0, 0, 0.55)',
         button: '0 10px 30px rgba(0, 0, 0, 0.35)',
-        glow: '0 0 40px rgba(244, 118, 59, 0.3)',
-        'glow-lg': '0 0 80px rgba(244, 118, 59, 0.4)',
+        glow: '0 0 40px rgba(5, 150, 105, 0.3)',
+        'glow-lg': '0 0 80px rgba(5, 150, 105, 0.4)',
       },
       keyframes: {
         "accordion-down": {
