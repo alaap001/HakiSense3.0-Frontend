@@ -1,5 +1,60 @@
 # Changelog — HakiSense 3.0 Frontend
 
+## 2026-06-07 — LandingNav: add "How it works" link
+
+**Task:** The top nav only had "Pricing"; add "How it works" (→ the Walkthrough section) like the footer has.
+
+**Changed:**
+- `src/components/landing/LandingNav.tsx` — added a ghost "How it works" → `/#how` link before "Pricing" (mirrors the footer order). Same treatment as the Pricing link (hidden on `<sm`, ghost, `text-text-secondary`); uses the existing ScrollManager hash-scroll.
+
+**Unchanged:** Footer (already had the link), the sections, all other nav.
+**Verification:** `tsc --noEmit` rc=0 + `eslint` rc=0.
+**Execution model:** unchanged. **Breaking changes:** none. **New dependencies:** none.
+
+## 2026-06-07 — Landing Pricing act: selectable cards + loaded content + quarterly-first pricing
+
+**Task:** Cards looked sparse; make them feel generous, click-to-select (Pro default), and push quarterly billing to drive the sale.
+
+**Changed:**
+- `src/components/landing/sections/PricingSection.tsx` — presentation only:
+  - **Selectable cards** — the three tiers are now a `role="radiogroup"` of `role="radio"` cards; click / Enter / Space selects one (default **Pro**). The selected card gets the emerald hero emphasis (ring + glow + fade-in tint + raised + filled CTA + "Selected" chip + gradient price); the others relax to an outline CTA. UI-only — billing isn't wired, so a later Stripe phase just reads the choice. The select transition animates only margin/shadow/border/background (never transform/opacity, which the GSAP `[data-reveal]` entrance drives), and the raise uses margin, not transform.
+  - **Loaded content** — added a 2-up quota strip per card (Dossiers/mo + Chat credits: 1/200, 30/3,000, 150/25,000) and expanded feature lists to 6–7 app-grounded capabilities each (full dossiers — scenarios/valuation/financials/coverage, Qdrant retrieval, cited ask-the-stock chat, journal analytics, AI trade review, history, priority/early access), under an "Everything in Free/Pro, plus" lead. More padding. Cards now read full.
+  - **Quarterly-first** — default billing cycle is **quarterly**, and prices show **per-month** for both cycles, so switching to quarterly visibly drops the headline (Pro ₹999→₹820/mo, Ultra ₹2,999→₹1,961/mo) with "₹X billed every 3 months" + the bigger "Save 45%/66%" badge. Added a "SAVE 66%" flag on the Quarterly toggle and a dynamic nudge line.
+
+**Unchanged:** All prices, quotas and the underlying math — quarterly is just displayed per-month. No billing wired, nothing gated/unlocked, no network calls. Nav/footer links untouched.
+**Verification:** `tsc --noEmit` rc=0 + `eslint` rc=0 (incl. jsx-a11y on the radiogroup).
+**Execution model:** unchanged. **Breaking changes:** none. **New dependencies:** none.
+
+## 2026-06-07 — Landing Pricing act: visual polish (fix "dull" — depth, contrast, Pro hero)
+
+**Task:** The pricing cards melted into the pale mint canvas (pale-on-pale, no focal point). Add depth/contrast and make Pro the clear hero.
+
+**Changed:**
+- `src/components/landing/sections/PricingSection.tsx` — presentation only:
+  - Cards no longer use `.card-glass` (which hard-sets `box-shadow`/`border` and swallowed any added ring/shadow). They're now composed from Tailwind utilities — a solid `--glass-strong-bg` surface, a `border-hairline-strong` edge, `backdrop-blur-xl`, and a real drop shadow — so they lift cleanly off the mint in light **and** dark.
+  - **Pro hero:** emerald-tinted surface (gradient overlay), `ring-2` + colored emerald glow shadow, a flush top-right "Most popular" tab (emerald→teal gradient, white), price rendered in `text-gradient`, and raised above its neighbours via **margin** (`lg:mt-8` on Free/Ultra) — never a transform, so it can't clobber the `[data-reveal]` GSAP entrance.
+  - **Ultra:** subtle powder/sky tint to distinguish it from Free; its AI-on-Journal perk keeps the spark accent.
+  - **Depth:** replaced the near-invisible `act-turn` wash with three visible emerald/powder radial blooms on a transform-free parallax wrapper (blooms self-center, no GSAP conflict).
+  - **Contrast:** prices bumped to `text-5xl`, bolder discount/feature chips (now ring-bordered), headline to `text-4xl`/`sm:text-5xl`.
+
+**Unchanged:** All prices, quotas, copy, the monthly/quarterly toggle, CTAs, and nav/footer links — byte-for-byte. No billing wired.
+**Verification:** `tsc --noEmit` rc=0 + `eslint` rc=0.
+**Execution model:** unchanged. **Breaking changes:** none. **New dependencies:** none.
+
+## 2026-06-07 — Landing: early-bird Pricing act (Free / Pro / Ultra, INR, monthly + quarterly)
+
+**Task:** The Landing scroll was missing a pricing moment — add one, themed to the narrated scroll.
+
+**Changed:**
+- `src/components/landing/sections/PricingSection.tsx` — **NEW** `#pricing` act. Three INR tiers (Free / Pro / Ultra) with a monthly ↔ quarterly toggle. Pro is the highlighted "Most popular" card (emerald ring + glow); Ultra surfaces its exclusive AI-on-Journal perk. Early-bird savings read in money-green (`pos`), keeping the brand's "rare orange" reserved for the Finale spark. Prices/quotas: Free ₹0 (1 dossier/mo · 200 chat credits · free journal forever); Pro ₹999/mo (was ₹1,491, 33% off · 30 dossiers · 3,000 credits) / ₹2,460 per quarter (45% off · ≈₹820/mo); Ultra ₹2,999/mo (was ₹5,767, 48% off · 150 dossiers · 25,000 credits · AI journal analysis) / ₹5,882 per quarter (66% off · ≈₹1,961/mo). Struck originals derived from `price ÷ (1 − discount)`; quarterly = list × 3 then the quarterly discount (Option A, approved). `data-reveal` entrance + a `data-parallax` brand bloom for depth, matching the other acts.
+- `src/pages/Landing.tsx` — render `<PricingSection />` between `<PrincipleSection />` and `<FinaleSection />` (philosophy → price → closer); arc docstring updated.
+- `src/components/site/SiteFooter.tsx` — added `Pricing` → `/#pricing` to the Product column.
+- `src/components/landing/LandingNav.tsx` — added a `Pricing` ghost anchor (`/#pricing`, hidden on `<sm`) before the auth buttons.
+
+**Unchanged:** No billing/Stripe wiring, no `app_metadata.plan` enforcement, no feature gated or unlocked — presentation only. All CTAs route to `/signup` (or `/dashboard` when signed in), consistent with the Finale. App-pages cascade (Batches B–D) still paused at the Dashboard checkpoint.
+**Verification:** `tsc --noEmit` rc=0 + `eslint` rc=0 on all four touched files.
+**Execution model:** unchanged. **Breaking changes:** none. **New dependencies:** none.
+
 ## 2026-06-07 — App polish Batch A: Dashboard migrated to the shared system (checkpoint exemplar)
 
 **Task:** First page on the new app design system, so the shared look can be sanity-checked before cascading to the rest.

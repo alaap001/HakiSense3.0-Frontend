@@ -1,0 +1,416 @@
+import { type KeyboardEvent, useState } from "react"
+import { Link } from "react-router-dom"
+import { ArrowRight, Check, Sparkles } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
+import { useAuth } from "@/contexts/AuthContext"
+import { cn } from "@/lib/utils"
+
+/**
+ * Act 5.5 — the offer. Three INR tiers the visitor can click to select (Pro is the
+ * default, "Most popular"). The selected card gets the emerald hero emphasis — ring,
+ * glow, tint, raise, filled CTA — so picking a plan feels tactile even though billing
+ * isn't wired yet (a later Stripe phase just reads the choice). Savings stay in
+ * money-green (pos), keeping the brand's one deliberate orange for the Finale chip.
+ *
+ * Quarterly is the default cycle and every price is shown PER MONTH, so switching to
+ * quarterly visibly drops the headline number — the strongest nudge toward the sale.
+ *
+ * Cards are composed from Tailwind utilities (NOT .card-glass, which hard-sets
+ * box-shadow and would swallow the ring/shadow). The select transition animates only
+ * margin/shadow/border/background — never transform/opacity, which the [data-reveal]
+ * GSAP entrance drives — and the raise is margin, not transform, for the same reason.
+ */
+
+type Cycle = "monthly" | "quarterly"
+type TierId = "free" | "pro" | "ultra"
+
+type CyclePrice = {
+  /** the big, per-month figure shown */
+  perMonth: number
+  /** struck-through per-month list price */
+  listPerMonth?: number
+  /** percent off, badged as "Save N%" */
+  discount?: number
+  /** small line under the price: how it's actually billed */
+  billed: string
+}
+
+type Tier = {
+  id: TierId
+  name: string
+  tagline: string
+  popular?: boolean
+  cta: string
+  /** headline quotas for the 2-up stat strip */
+  dossiers: string
+  credits: string
+  /** "Everything in X, plus" lead above the feature list */
+  includesLead?: string
+  features: { text: string; spark?: boolean }[]
+  monthly: CyclePrice
+  quarterly: CyclePrice
+}
+
+// Originals derived from the post-discount price the founder set:
+//   Pro 999 ÷ (1−0.33) = 1,491   ·   Ultra 2,999 ÷ (1−0.48) = 5,767
+// Quarterly = list × 3 then the quarterly discount (45% Pro / 66% Ultra), shown ÷3 as
+// a per-month figure: Pro 2,460/qtr → 820/mo · Ultra 5,882/qtr → 1,961/mo.
+const TIERS: Tier[] = [
+  {
+    id: "free",
+    name: "Free",
+    tagline: "Get a real dossier in your hands — on the house.",
+    cta: "Start free",
+    dossiers: "1",
+    credits: "200",
+    features: [
+      { text: "Evidence-gated thesis, findings & risks" },
+      { text: "Live-streamed research run" },
+      { text: "Ask-the-stock chat with cited sources" },
+      { text: "Free trade journal — forever" },
+      { text: "Equity curve, win-rate & R-multiples" },
+      { text: "Calendar heatmap & performance breakdowns" },
+      { text: "Your research history, saved" },
+    ],
+    monthly: { perMonth: 0, billed: "Forever — no card" },
+    quarterly: { perMonth: 0, billed: "Forever — no card" },
+  },
+  {
+    id: "pro",
+    name: "Pro",
+    tagline: "For the investor who researches every week.",
+    popular: true,
+    cta: "Go Pro",
+    dossiers: "30",
+    credits: "3,000",
+    includesLead: "Everything in Free, plus",
+    features: [
+      { text: "Full dossiers — scenarios, valuation, financials & coverage" },
+      { text: "Qdrant-backed deep evidence retrieval" },
+      { text: "Priority research queue" },
+      { text: "Room to chat through long research sessions" },
+      { text: "Unlimited research history" },
+      { text: "Early access to new research agents" },
+    ],
+    monthly: { perMonth: 999, listPerMonth: 1491, discount: 33, billed: "billed monthly" },
+    quarterly: {
+      perMonth: 820,
+      listPerMonth: 1491,
+      discount: 45,
+      billed: "₹2,460 billed every 3 months",
+    },
+  },
+  {
+    id: "ultra",
+    name: "Ultra",
+    tagline: "Desk-grade volume, plus an AI eye on your trades.",
+    cta: "Go Ultra",
+    dossiers: "150",
+    credits: "25,000",
+    includesLead: "Everything in Pro, plus",
+    features: [
+      { text: "AI-powered analysis on your Journal trades", spark: true },
+      { text: "AI critique of entries, stops, sizing & plan adherence" },
+      { text: "Recurring-mistake detection across your journal" },
+      { text: "The highest research & chat limits" },
+      { text: "Earliest access to new features" },
+      { text: "Priority support" },
+    ],
+    monthly: { perMonth: 2999, listPerMonth: 5767, discount: 48, billed: "billed monthly" },
+    quarterly: {
+      perMonth: 1961,
+      listPerMonth: 5767,
+      discount: 66,
+      billed: "₹5,882 billed every 3 months",
+    },
+  },
+]
+
+const inr = (n: number) => n.toLocaleString("en-IN")
+
+function PriceBlock({
+  tier,
+  cycle,
+  highlight,
+}: {
+  tier: Tier
+  cycle: Cycle
+  highlight: boolean
+}) {
+  const p = tier[cycle]
+
+  if (p.perMonth === 0) {
+    return (
+      <div className="mt-5">
+        <span
+          className={cn(
+            "font-display text-5xl font-bold tracking-tight",
+            highlight ? "text-gradient" : "text-text-primary",
+          )}
+        >
+          Free
+        </span>
+        <p className="mt-2 min-h-4 text-xs text-text-secondary/70">{p.billed}</p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="mt-5">
+      {p.discount ? (
+        <span className="inline-flex items-center rounded-full bg-pos/15 px-2.5 py-1 text-[11px] font-bold text-pos ring-1 ring-pos/25">
+          Save {p.discount}%
+        </span>
+      ) : null}
+      <div className="mt-2.5 flex items-end gap-2">
+        {p.listPerMonth ? (
+          <span className="pb-1.5 font-mono text-sm text-text-secondary/50 line-through">
+            ₹{inr(p.listPerMonth)}
+          </span>
+        ) : null}
+        <span
+          className={cn(
+            "font-display text-5xl font-bold tracking-tight",
+            highlight ? "text-gradient" : "text-text-primary",
+          )}
+        >
+          ₹{inr(p.perMonth)}
+        </span>
+        <span className="pb-1.5 text-sm text-text-secondary">/mo</span>
+      </div>
+      <p className="mt-2 min-h-4 text-xs text-text-secondary/70">{p.billed}</p>
+    </div>
+  )
+}
+
+export function PricingSection() {
+  const { isAuthenticated } = useAuth()
+  const [cycle, setCycle] = useState<Cycle>("quarterly")
+  const [selected, setSelected] = useState<TierId>("pro")
+  const href = isAuthenticated ? "/dashboard" : "/signup"
+
+  return (
+    <section id="pricing" className="relative scroll-mt-20 overflow-hidden py-24 sm:py-28">
+      {/* Layered backdrop — visible emerald + powder blooms give the pale section depth.
+          Parallax wrapper is transform-free; the blooms own their translate-centering. */}
+      <div aria-hidden data-parallax="30" className="pointer-events-none absolute inset-0 z-0">
+        <div
+          className="absolute left-1/2 top-[48%] size-[42rem] max-w-[130vw] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
+          style={{ background: "radial-gradient(circle, rgba(16,185,129,0.22), transparent 60%)" }}
+        />
+        <div
+          className="absolute right-[6%] top-[14%] size-[24rem] rounded-full blur-3xl"
+          style={{ background: "radial-gradient(circle, rgba(79,163,204,0.16), transparent 62%)" }}
+        />
+        <div
+          className="absolute bottom-[6%] left-[4%] size-[22rem] rounded-full blur-3xl"
+          style={{ background: "radial-gradient(circle, rgba(16,185,129,0.14), transparent 64%)" }}
+        />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-6xl px-6">
+        {/* Header */}
+        <div className="mx-auto max-w-2xl text-center" data-reveal>
+          <p className="micro-label">Pricing</p>
+          <h2 className="mt-3 font-display text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl">
+            Founding-member pricing.{" "}
+            <span className="text-gradient">Before it goes up.</span>
+          </h2>
+          <p className="mt-4 text-base leading-relaxed text-text-secondary">
+            Lock in launch rates while we&apos;re early — up to{" "}
+            <span className="font-semibold text-text-primary">66% off</span>. Your free
+            journal stays free, and there&apos;s no card to start.
+          </p>
+        </div>
+
+        {/* Billing toggle — quarterly is the default and the emphasised "best value". */}
+        <div className="mt-8 flex flex-col items-center gap-3" data-reveal>
+          <div className="inline-flex items-center gap-1 rounded-full border border-hairline-strong bg-panel p-1 shadow-sm backdrop-blur-md">
+            {(["monthly", "quarterly"] as const).map((c) => (
+              <button
+                key={c}
+                type="button"
+                onClick={() => setCycle(c)}
+                aria-pressed={cycle === c}
+                className={cn(
+                  "rounded-full px-4 py-2 text-sm font-medium capitalize transition-colors",
+                  cycle === c
+                    ? "bg-violet/15 text-brand-strong ring-1 ring-violet/40"
+                    : "text-text-secondary hover:text-text-primary",
+                )}
+              >
+                {c}
+                {c === "quarterly" ? (
+                  <span className="ml-1.5 rounded-full bg-pos/20 px-1.5 py-0.5 text-[10px] font-bold text-pos">
+                    SAVE 66%
+                  </span>
+                ) : null}
+              </button>
+            ))}
+          </div>
+          <p className="text-xs text-text-secondary">
+            {cycle === "quarterly" ? (
+              <span className="font-medium text-pos">
+                Best value — you&apos;re locking in up to 66% off with quarterly billing.
+              </span>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setCycle("quarterly")}
+                className="font-medium text-brand-strong underline-offset-2 hover:underline"
+              >
+                Switch to quarterly and save up to 66% →
+              </button>
+            )}
+          </p>
+        </div>
+
+        {/* Tier cards — a radiogroup; click / Enter / Space selects. */}
+        <div
+          role="radiogroup"
+          aria-label="Choose a plan"
+          className="mt-12 grid items-start gap-6 lg:grid-cols-3"
+        >
+          {TIERS.map((tier) => {
+            const isSelected = selected === tier.id
+            const select = () => setSelected(tier.id)
+            const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault()
+                select()
+              }
+            }
+
+            return (
+              <div
+                key={tier.id}
+                role="radio"
+                aria-checked={isSelected}
+                aria-label={`${tier.name} plan`}
+                tabIndex={0}
+                onClick={select}
+                onKeyDown={onKeyDown}
+                className={cn(
+                  "group relative flex cursor-pointer select-none flex-col overflow-hidden rounded-[22px] border text-left outline-none backdrop-blur-xl",
+                  "transition-[margin,box-shadow,border-color,background-color] duration-300",
+                  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet",
+                  isSelected
+                    ? "border-violet/50 bg-[var(--glass-strong-bg)] shadow-[0_40px_90px_-30px_rgba(5,150,105,0.5)] ring-2 ring-violet/40 lg:mt-0"
+                    : "border-hairline-strong bg-[var(--glass-strong-bg)] shadow-[0_24px_56px_-34px_rgba(2,28,20,0.5)] hover:border-violet/30 lg:mt-8",
+                )}
+              >
+                {/* Emerald hero tint — fades in on selection. */}
+                <div
+                  aria-hidden
+                  className={cn(
+                    "pointer-events-none absolute inset-0 bg-gradient-to-b from-violet/12 via-transparent to-transparent transition-opacity duration-300",
+                    isSelected ? "opacity-100" : "opacity-0",
+                  )}
+                />
+
+                {/* Flush top-right "Most popular" tab — Pro only, regardless of selection. */}
+                {tier.popular ? (
+                  <span className="absolute right-5 top-0 z-20 inline-flex items-center gap-1 rounded-b-lg bg-gradient-to-r from-violet-500 to-teal-500 px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-white shadow-[0_6px_16px_-6px_rgba(5,150,105,0.7)]">
+                    <Sparkles className="size-3" />
+                    Most popular
+                  </span>
+                ) : null}
+
+                <div className="relative z-10 flex flex-1 flex-col p-7">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-display text-lg font-semibold tracking-tight text-text-primary">
+                      {tier.name}
+                    </h3>
+                    {isSelected ? (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-violet/15 px-2 py-0.5 text-[10px] font-semibold text-brand-strong ring-1 ring-violet/30">
+                        <Check className="size-2.5" strokeWidth={3} />
+                        Selected
+                      </span>
+                    ) : null}
+                  </div>
+                  <p className="mt-1 min-h-[2.5rem] text-sm leading-relaxed text-text-secondary">
+                    {tier.tagline}
+                  </p>
+
+                  <PriceBlock tier={tier} cycle={cycle} highlight={isSelected} />
+
+                  {/* Quota strip — the big numbers, front and centre. */}
+                  <div className="mt-5 grid grid-cols-2 gap-2.5">
+                    <div className="rounded-xl border border-hairline bg-surface px-3 py-2.5">
+                      <p className="font-display text-xl font-bold leading-none text-text-primary">
+                        {tier.dossiers}
+                      </p>
+                      <p className="mt-1.5 font-mono text-[10px] uppercase tracking-wide text-text-secondary">
+                        dossiers / mo
+                      </p>
+                    </div>
+                    <div className="rounded-xl border border-hairline bg-surface px-3 py-2.5">
+                      <p className="font-display text-xl font-bold leading-none text-text-primary">
+                        {tier.credits}
+                      </p>
+                      <p className="mt-1.5 font-mono text-[10px] uppercase tracking-wide text-text-secondary">
+                        chat credits / mo
+                      </p>
+                    </div>
+                  </div>
+
+                  <Button
+                    asChild
+                    size="lg"
+                    variant={isSelected ? "default" : "outline"}
+                    className={cn(
+                      "mt-5 w-full gap-2",
+                      isSelected ? "btn-primary text-white" : "border-hairline-strong",
+                    )}
+                  >
+                    <Link to={href}>
+                      {tier.cta}
+                      <ArrowRight className="size-4" />
+                    </Link>
+                  </Button>
+
+                  <p className="mb-3 mt-6 border-t border-hairline pt-6 font-mono text-[10px] uppercase tracking-wider text-text-secondary">
+                    {tier.includesLead ?? "What's included"}
+                  </p>
+                  <ul className="space-y-2.5">
+                    {tier.features.map((f) => (
+                      <li
+                        key={f.text}
+                        className="flex items-start gap-3 text-sm text-text-secondary"
+                      >
+                        <span
+                          className={cn(
+                            "mt-0.5 grid size-5 shrink-0 place-items-center rounded-md ring-1",
+                            f.spark
+                              ? "bg-spark/15 text-spark-strong ring-spark/25"
+                              : "bg-pos/15 text-pos ring-pos/25",
+                          )}
+                        >
+                          {f.spark ? (
+                            <Sparkles className="size-3" />
+                          ) : (
+                            <Check className="size-3" strokeWidth={3} />
+                          )}
+                        </span>
+                        <span className={cn(f.spark && "font-medium text-text-primary")}>
+                          {f.text}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+
+        <p className="mt-10 text-center text-xs text-text-secondary/70" data-reveal>
+          Free to start · no card required · cancel anytime. Billing launches soon — your
+          early-bird rate is locked in. Chat credits power follow-up questions on any stock
+          (1 credit ≈ one message).
+        </p>
+      </div>
+    </section>
+  )
+}

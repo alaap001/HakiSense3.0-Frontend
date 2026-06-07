@@ -37,6 +37,16 @@ export function LandingNav() {
         </Link>
 
         <div className="ml-auto flex items-center gap-2">
+          <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
+            <Link to="/#how" className="text-text-secondary">
+              How it works
+            </Link>
+          </Button>
+          <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
+            <Link to="/#pricing" className="text-text-secondary">
+              Pricing
+            </Link>
+          </Button>
           <ThemeToggle />
           {isAuthenticated ? (
             <Button asChild size="sm" className="btn-primary text-white">

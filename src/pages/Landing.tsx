@@ -11,6 +11,7 @@ import { TurnSection } from "@/components/landing/sections/TurnSection"
 import { WalkthroughSection } from "@/components/landing/sections/WalkthroughSection"
 import { JournalSection } from "@/components/landing/sections/JournalSection"
 import { PrincipleSection } from "@/components/landing/sections/PrincipleSection"
+import { PricingSection } from "@/components/landing/sections/PricingSection"
 import { FinaleSection } from "@/components/landing/sections/FinaleSection"
 
 gsap.registerPlugin(useGSAP, ScrollTrigger)
@@ -24,6 +25,7 @@ gsap.registerPlugin(useGSAP, ScrollTrigger)
  *   Walk  → the product demonstrates itself (pinned beats)
  *   Journal → the free loyalty hook
  *   Principle → research, not recommendations
+ *   Pricing → the early-bird offer (Free / Pro / Ultra)
  *   Finale → name the pain, then take it away → CTA
  *
  * Each section owns its own markup; the hero and the walkthrough own their own
@@ -87,6 +89,7 @@ export default function Landing() {
         <WalkthroughSection />
         <JournalSection />
         <PrincipleSection />
+        <PricingSection />
         <FinaleSection />
         <SiteFooter />
       </div>

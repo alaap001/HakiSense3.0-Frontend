@@ -8,6 +8,7 @@ const COLUMNS: { heading: string; links: { label: string; to: string }[] }[] = [
     links: [
       { label: "How it works", to: "/#how" },
       { label: "Free journal", to: "/#journal" },
+      { label: "Pricing", to: "/#pricing" },
       { label: "Dashboard", to: "/dashboard" },
     ],
   },
