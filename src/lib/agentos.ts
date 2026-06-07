@@ -14,6 +14,32 @@ function authHeaders(token?: string): Record<string, string> {
   return token ? { Authorization: `Bearer ${token}` } : {}
 }
 
+/**
+ * Error carrying the HTTP status + the backend's `detail`. Lets callers distinguish a
+ * 402 (out of credits / over the research limit → show an upgrade prompt) from a generic
+ * failure, while `message` is the friendly server text ready to display.
+ */
+export class ApiError extends Error {
+  status: number
+  constructor(status: number, message: string) {
+    super(message)
+    this.name = "ApiError"
+    this.status = status
+  }
+}
+
+/** Build an {@link ApiError} from a failed response, preferring the JSON `detail`. */
+async function apiError(res: Response, fallback: string): Promise<ApiError> {
+  let detail = fallback
+  try {
+    const j = (await res.json()) as { detail?: unknown }
+    if (j && typeof j.detail === "string") detail = j.detail
+  } catch {
+    /* non-JSON error body — keep the fallback */
+  }
+  return new ApiError(res.status, detail)
+}
+
 export async function getHealth(): Promise<HealthStatus> {
   const res = await fetch(`${BASE}/api/health`)
   if (!res.ok) throw new Error(`health check failed: ${res.status}`)
@@ -36,7 +62,8 @@ export async function startResearch(
     body: JSON.stringify(req),
     signal,
   })
-  if (!res.ok || !res.body) throw new Error(`research failed to start: ${res.status}`)
+  // 402 → out of research credits for the period; the message carries the upgrade nudge.
+  if (!res.ok || !res.body) throw await apiError(res, `research failed to start: ${res.status}`)
   return res
 }
 
@@ -68,14 +95,15 @@ export async function startChat(
     body: JSON.stringify(req),
     signal,
   })
-  if (!res.ok || !res.body) throw new Error(`chat failed to start: ${res.status}`)
+  // 402 → out of chat credits for the period; the message carries the upgrade nudge.
+  if (!res.ok || !res.body) throw await apiError(res, `chat failed to start: ${res.status}`)
   return res
 }
 
 /**
  * Stream an AI review of a single journaled trade. Returns the streaming Response so the
  * caller drives the SSE with `readSSE()`. PAID: the backend 403s callers who aren't on the
- * Pro plan (verified from the JWT's app_metadata.plan claim), and 401s without a token.
+ * Ultra plan (verified server-side against the billing subscription), and 401s without a token.
  */
 export async function startTradeAnalysis(
   req: TradeAnalysisRequest,
@@ -88,8 +116,8 @@ export async function startTradeAnalysis(
     body: JSON.stringify(req),
     signal,
   })
-  if (res.status === 403) throw new Error("AI analysis is a Pro feature.")
-  if (!res.ok || !res.body) throw new Error(`analysis failed to start: ${res.status}`)
+  // 403 → not on Ultra; the backend `detail` ("AI trade review is an Ultra feature…") is used.
+  if (!res.ok || !res.body) throw await apiError(res, `analysis failed to start: ${res.status}`)
   return res
 }
 

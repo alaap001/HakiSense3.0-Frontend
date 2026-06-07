@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from "react"
 
-import { startChat } from "@/lib/agentos"
+import { ApiError, startChat } from "@/lib/agentos"
 import { readSSE } from "@/lib/sse"
 
 export interface ChatMessage {
@@ -16,6 +16,8 @@ export interface UseChat {
   /** Human-readable hint while the agent works a tool ("Reading the filings…"). */
   statusLabel: string
   error: string | null
+  /** True when the last send was refused for being out of monthly chat credits (HTTP 402). */
+  limitReached: boolean
   send: (text: string) => Promise<void>
   cancel: () => void
 }
@@ -55,6 +57,7 @@ export function useChat(
   const [status, setStatus] = useState<ChatStatus>("idle")
   const [statusLabel, setStatusLabel] = useState("")
   const [error, setError] = useState<string | null>(null)
+  const [limitReached, setLimitReached] = useState(false)
   const abortRef = useRef<AbortController | null>(null)
   // Minted on the first send (an event handler, not render — keeps the render pure) and reused
   // for the rest of the visit, so follow-ups share one conversation. Reset on remount = fresh.
@@ -72,6 +75,7 @@ export function useChat(
       const ctrl = new AbortController()
       abortRef.current = ctrl
       setError(null)
+      setLimitReached(false)
       setStatus("streaming")
       setStatusLabel("Thinking…")
       // append the user turn + an empty assistant turn we stream into
@@ -133,6 +137,12 @@ export function useChat(
         setStatusLabel("")
       } catch (err) {
         if (!ctrl.signal.aborted) {
+          // Drop the optimistic empty assistant bubble so it doesn't hang on "Thinking…".
+          setMessages((m) => {
+            const last = m[m.length - 1]
+            return last && last.role === "assistant" && !last.content ? m.slice(0, -1) : m
+          })
+          setLimitReached(err instanceof ApiError && err.status === 402)
           setError(err instanceof Error ? err.message : String(err))
           setStatus("error")
           setStatusLabel("")
@@ -148,5 +158,5 @@ export function useChat(
     setStatusLabel("")
   }, [])
 
-  return { messages, status, statusLabel, error, send, cancel }
+  return { messages, status, statusLabel, error, limitReached, send, cancel }
 }

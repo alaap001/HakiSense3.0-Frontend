@@ -26,7 +26,7 @@ export function AdminOverview() {
       <Stat
         label="Users"
         value={data.users.total}
-        sub={`${data.users.pro} pro · ${data.users.free} free`}
+        sub={`${data.users.ultra} ultra · ${data.users.pro} pro · ${data.users.free} free`}
       />
       <Stat
         label="Trades"

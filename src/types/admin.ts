@@ -8,8 +8,10 @@ import type { Strategy, Trade } from "@/types/journal"
 export type RunMode = "intake" | "scope" | "full"
 export type RunStatus = "running" | "completed" | "failed"
 
+export type AdminPlan = "free" | "pro" | "ultra"
+
 export interface AdminOverview {
-  users: { total: number; pro: number; free: number }
+  users: { total: number; free: number; pro: number; ultra: number }
   trades: { total: number; open: number; closed: number }
   runs: { total: number; completed: number; failed: number; running: number }
   /** Total LLM spend across all recorded research runs. */
@@ -21,7 +23,7 @@ export interface AdminUser {
   email: string | null
   created_at: string | null
   last_sign_in_at: string | null
-  plan: "free" | "pro"
+  plan: AdminPlan
   role: string | null
   /** Per-user counts (joined server-side). */
   trades: number
@@ -58,7 +60,7 @@ export interface AdminUserDetail {
     email: string | null
     created_at: string | null
     last_sign_in_at: string | null
-    plan: "free" | "pro"
+    plan: AdminPlan
     role: string | null
   }
   trades: Trade[]

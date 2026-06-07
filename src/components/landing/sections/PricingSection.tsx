@@ -1,9 +1,11 @@
-import { type KeyboardEvent, useState } from "react"
+import { type KeyboardEvent, useMemo, useState } from "react"
 import { Link } from "react-router-dom"
 import { ArrowRight, Check, Sparkles } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/contexts/AuthContext"
+import { usePlans } from "@/hooks/usePlans"
+import type { PlanRow } from "@/lib/billing"
 import { cn } from "@/lib/utils"
 
 /**
@@ -184,11 +186,45 @@ function PriceBlock({
   )
 }
 
+/** Map a backend billing_plans row to the local presentational Tier shape. */
+function planRowToTier(p: PlanRow): Tier {
+  return {
+    id: p.tier,
+    name: p.name,
+    tagline: p.tagline ?? "",
+    popular: p.popular,
+    cta: p.cta ?? "Choose",
+    dossiers: p.dossiers_label ?? String(p.research_per_month),
+    credits: p.credits_label ?? String(p.credits_per_month),
+    includesLead: p.includes_lead ?? undefined,
+    features: p.features ?? [],
+    monthly: p.pricing.monthly,
+    quarterly: p.pricing.quarterly,
+  }
+}
+
 export function PricingSection() {
   const { isAuthenticated } = useAuth()
+  const { data: plans } = usePlans()
   const [cycle, setCycle] = useState<Cycle>("quarterly")
   const [selected, setSelected] = useState<TierId>("pro")
-  const href = isAuthenticated ? "/dashboard" : "/signup"
+
+  // Pricing is backend-driven (admin-editable); fall back to the static TIERS if the API blips.
+  const tiers: Tier[] = useMemo(
+    () => (plans && plans.length ? plans.map(planRowToTier) : TIERS),
+    [plans],
+  )
+
+  // Free → start using the app; paid tiers → the billing page (it runs Razorpay checkout).
+  // Signed-out visitors are sent to sign up first.
+  const ctaHref = (tier: Tier) =>
+    tier.id === "free"
+      ? isAuthenticated
+        ? "/dashboard"
+        : "/signup"
+      : isAuthenticated
+        ? `/billing?tier=${tier.id}&cycle=${cycle}`
+        : "/signup"
 
   return (
     <section id="pricing" className="relative scroll-mt-20 overflow-hidden py-24 sm:py-28">
@@ -272,7 +308,7 @@ export function PricingSection() {
           aria-label="Choose a plan"
           className="mt-12 grid items-start gap-6 lg:grid-cols-3"
         >
-          {TIERS.map((tier) => {
+          {tiers.map((tier) => {
             const isSelected = selected === tier.id
             const select = () => setSelected(tier.id)
             const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
@@ -364,7 +400,7 @@ export function PricingSection() {
                       isSelected ? "btn-primary text-white" : "border-hairline-strong",
                     )}
                   >
-                    <Link to={href}>
+                    <Link to={ctaHref(tier)}>
                       {tier.cta}
                       <ArrowRight className="size-4" />
                     </Link>
@@ -406,9 +442,8 @@ export function PricingSection() {
         </div>
 
         <p className="mt-10 text-center text-xs text-text-secondary/70" data-reveal>
-          Free to start · no card required · cancel anytime. Billing launches soon — your
-          early-bird rate is locked in. Chat credits power follow-up questions on any stock
-          (1 credit ≈ one message).
+          Free to start · no card required · cancel anytime. Founding-member rates — lock yours
+          in today. Chat credits power follow-up questions on any stock (1 credit ≈ one message).
         </p>
       </div>
     </section>

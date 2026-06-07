@@ -1,5 +1,80 @@
 # Changelog — HakiSense 3.0 Frontend
 
+## 2026-06-07 — FIX: Refresh usage after a research run completes
+
+**Task:** After a full dossier debits a research credit (now charged on first-time runs incl. cache hits — see backend), the Dashboard usage strip/card showed stale counts (the `["billing","me"]` query was never invalidated, only `["runs"]`).
+
+**Changed:**
+- `src/pages/Dashboard.tsx` — the `phase==="done"` effect now also invalidates `["billing","me"]`, so the usage strip and Plan & usage card re-read `GET /api/billing/me` the moment a run finishes.
+
+**Unchanged:** all billing logic/data (backend-owned), chat credit display.
+**Verification:** `tsc -b` rc=0; `eslint src/pages/Dashboard.tsx` rc=0.
+**Execution model:** unchanged. **Breaking changes:** none. **New dependencies:** none.
+
+## 2026-06-07 — FEAT: Surface plan + credit/research usage on Dashboard, Profile & nav
+
+**Task:** Let users see — outside of Settings — what plan they're on, how many chat credits / research they've used and have left, and whether they should upgrade.
+
+**Added:**
+- `src/components/billing/usage.ts` — `usageState(used, limit)` helper (remaining / pct / low / out / capped); single source for meter math.
+- `src/components/billing/PlanPill.tsx` — plan-accent pill (free neutral, Pro brand, Ultra spark), shared across nav/card/strip.
+- `src/components/billing/UsageMeter.tsx` — labeled monthly-usage bar: "N left" headline + "x of y used" caption, brand→warn→neg as it runs low/empty.
+- `src/components/billing/PlanUsageCard.tsx` — canonical "Plan & usage" card (plan, renewal/reset line, both meters, Upgrade/Manage CTA); hides meters when usage isn't tracked (dev).
+- `src/components/billing/UsageStrip.tsx` — compact Dashboard strip: research + credits remaining, plan pill, Upgrade nudge when free or low; renders nothing when unmetered.
+
+**Changed:**
+- `src/pages/Dashboard.tsx` — `<UsageStrip/>` under the header so research limits show before a free user clicks Run.
+- `src/pages/Profile.tsx` — added `<PlanUsageCard/>` (previously had no plan/usage at all).
+- `src/pages/Settings.tsx` — replaced the in-file `PlanBillingCard`/`UsageRow` with the shared `<PlanUsageCard/>` (refactor, no behavior change; removes the duplicate so all surfaces stay consistent).
+- `src/components/AppNav.tsx` — plan pill in the account-dropdown label + a "Plan & billing" item linking to `/billing`. Pill reads the JWT claim via `useEntitlements` (no extra fetch).
+
+**Unchanged:** backend, Supabase, Razorpay, all metering/gating logic and limits — data already came from `useBilling()`/`GET /api/billing/me`. No usage-reset date is fabricated (paid renewal uses the existing `current_period_end`).
+**Verification:** `tsc -b` rc=0; `eslint` rc=0 on all new/changed files. (Pre-existing, untouched `Profile.tsx:23` `set-state-in-effect` lint error is unrelated.)
+**Execution model:** unchanged. **Breaking changes:** none. **New dependencies:** none.
+
+## 2026-06-07 — FEAT (Phase 4/4): Admin pricing editor + Ultra-aware admin panel
+
+**Task:** Admin UI to edit Free/Pro/Ultra pricing, limits, copy and features live (no redeploy), backed by the Phase-2 `GET/PATCH /api/admin/plans`. Plus making the admin panel `ultra`-aware.
+
+**Added:**
+- `src/components/admin/AdminPlansEditor.tsx` — per-plan form (name/tagline/CTA/lead, research & credit limits + display labels, monthly ₹/mo + quarterly ₹/3mo + optional list price, popular/active/journal-AI toggles, features as one-per-line text where `* ` = a highlighted feature). Prices are entered in ₹ and the charge (`amount_paise`), per-month figure, `billed` line and `discount` are derived on save. Editing invalidates the public `["plans"]` + `["billing","me"]` caches so the landing/usage reflect changes.
+
+**Changed:**
+- `src/lib/admin.ts` — `adminPlans()` (GET) + `adminUpdatePlan()` (PATCH); `adminSetPlan` typed to `AdminPlan`.
+- `src/hooks/useAdmin.ts` — `useAdminPlans()` + `useUpdatePlan()`; `useSetPlan` accepts `ultra`.
+- `src/pages/Admin.tsx` — new **Pricing** tab → `AdminPlansEditor`.
+- `src/pages/AdminUserDetail.tsx` — binary Pro/Free toggle replaced with a 3-way free/pro/ultra selector (the backend grant now writes the authoritative subscription, not just the claim).
+- `src/components/admin/AdminOverview.tsx` + `src/components/admin/widgets.tsx` (`PlanBadge`) + `src/types/admin.ts` — `ultra` plan everywhere; overview shows `ultra · pro · free`.
+
+**Unchanged:** all non-admin surfaces; the admin guard (`app_metadata.role === "admin"`).
+**Verification:** `tsc -b` rc=0 + `eslint` rc=0 on all touched files.
+**Execution model:** unchanged. **Breaking changes:** none. **New dependencies:** none.
+
+## 2026-06-07 — FEAT (Phase 3/4): Billing UI — backend-driven pricing, Razorpay checkout, usage + 402 handling
+
+**Task:** Frontend for Free/Pro/Ultra billing — fetch pricing from the backend, run real Razorpay Standard Checkout, show usage, and handle "out of credits / over limit" + the Ultra-only journal gate. Pairs with the Phase-2 backend.
+
+**Added:**
+- `src/lib/razorpay.ts` — lazy `checkout.js` loader + typed `openCheckout` (success/dismiss/failure callbacks); `CheckoutDismissed` for user-cancel.
+- `src/lib/billing.ts` — billing API client (`getPlans`, `getBillingMe`, `createOrder`, `verifyPayment`) + types (`PlanRow`/`BillingMe`/…); throws `ApiError` on failure.
+- `src/hooks/usePlans.ts` — public pricing query. `src/hooks/useBilling.ts` — `useBilling` (plan + usage snapshot) and `useUpgrade` (order → checkout → verify → `refreshSession` → invalidate).
+- `src/pages/Billing.tsx` — `/billing` page (protected): current plan + credit/research usage bars, cycle toggle, plan cards with Razorpay buy buttons, success/error notices, dismiss handled silently.
+
+**Changed:**
+- `src/lib/agentos.ts` — new exported `ApiError` (status + backend `detail`); `startResearch`/`startChat`/`startTradeAnalysis` now throw it (so 402/403 carry the friendly upgrade text).
+- `src/components/landing/sections/PricingSection.tsx` — renders from `usePlans()` (maps `billing_plans` rows → the existing card shape; static `TIERS` kept as fallback); paid CTAs → `/billing?tier=&cycle=` when authed, `/signup` otherwise; footer copy updated (billing is live).
+- `src/hooks/useEntitlements.ts` + `src/types/journal.ts` — `Plan` gains `ultra`; entitlements expose `isPro`(=pro|ultra)/`isUltra`/`isPaid`; `canUseAi` is now **Ultra-only**.
+- `src/components/journal/AiTradeReview.tsx` — gate switched to `canUseAi` (Ultra). `src/components/journal/UpgradeGate.tsx` — copy → Ultra, button now links to `/billing?tier=ultra`.
+- `src/hooks/useChat.ts` + `src/hooks/useResearchRun.ts` — expose `limitReached` (set on `ApiError` 402); chat drops the optimistic empty bubble on error.
+- `src/components/dossier/TickerChat.tsx` + `src/pages/Dashboard.tsx` — on `limitReached`, show an "Upgrade" link to `/billing` next to the error.
+- `src/pages/Settings.tsx` — new "Plan & billing" card (current plan + usage bars + Manage/Upgrade → `/billing`).
+- `src/App.tsx` — `/billing` route under `ProtectedLayout`.
+- `src/lib/admin.ts` + `src/hooks/useAdmin.ts` — `adminSetPlan` / `useSetPlan` accept `ultra`.
+
+**Unchanged:** the SSE chat/research stream contracts and journal CRUD; the supabase client (anon key only — no service_role in the browser); the Razorpay `key_id` is returned by the order endpoint, so no `VITE_RAZORPAY_*` env var is required.
+**Verification:** `tsc -b` rc=0 + `eslint` rc=0 on all touched files.
+**Execution model:** unchanged. **Breaking changes:** journal AI is now Ultra-only (was Pro). **New dependencies:** none (checkout.js is loaded at runtime, not bundled).
+
 ## 2026-06-07 — LandingNav: add "How it works" link
 
 **Task:** The top nav only had "Pricing"; add "How it works" (→ the Walkthrough section) like the footer has.

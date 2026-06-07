@@ -4,9 +4,11 @@
  * goes on the Authorization header; a 403 means "not an admin", a 503 means the backend has
  * no service-role key configured (surfaced verbatim to the UI).
  */
+import type { PlanRow } from "@/lib/billing"
 import type {
   AdminListParams,
   AdminOverview,
+  AdminPlan,
   AdminRunsResponse,
   AdminTradesResponse,
   AdminUser,
@@ -71,7 +73,7 @@ export function adminTrades(params: AdminListParams, token?: string): Promise<Ad
 
 export async function adminSetPlan(
   id: string,
-  plan: "free" | "pro",
+  plan: AdminPlan,
   token?: string,
 ): Promise<{ id: string; plan: string }> {
   const res = await fetch(`${BASE}/api/admin/users/${encodeURIComponent(id)}/plan`, {
@@ -80,4 +82,24 @@ export async function adminSetPlan(
     body: JSON.stringify({ plan }),
   })
   return handle<{ id: string; plan: string }>(res, "set plan")
+}
+
+/** Full plan catalogue (incl. inactive) for the admin pricing editor. */
+export function adminPlans(token?: string): Promise<PlanRow[]> {
+  return get<{ plans: PlanRow[] }>("/api/admin/plans", token, "plans").then((d) => d.plans ?? [])
+}
+
+/** Edit a plan's pricing / limits / copy. Returns the updated row. */
+export async function adminUpdatePlan(
+  tier: string,
+  patch: Partial<PlanRow>,
+  token?: string,
+): Promise<PlanRow> {
+  const res = await fetch(`${BASE}/api/admin/plans/${encodeURIComponent(tier)}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...authHeaders(token) },
+    body: JSON.stringify(patch),
+  })
+  const data = await handle<{ plan: PlanRow }>(res, "update plan")
+  return data.plan
 }

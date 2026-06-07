@@ -5,7 +5,7 @@
  * NOT stored — see `@/lib/journal/metrics`.
  */
 
-export type Plan = "free" | "pro"
+export type Plan = "free" | "pro" | "ultra"
 
 export type TradeDirection = "long" | "short"
 export type TradeStatus = "open" | "closed"

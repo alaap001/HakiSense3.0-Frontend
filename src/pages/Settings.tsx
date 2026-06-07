@@ -12,6 +12,7 @@ import {
   Sun,
 } from "lucide-react"
 
+import { PlanUsageCard } from "@/components/billing/PlanUsageCard"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import {
@@ -55,6 +56,7 @@ export default function Settings() {
       )}
 
       <div className="mt-8 space-y-6">
+        <PlanUsageCard />
         <AppearanceCard />
         <EmailCard
           currentEmail={user?.email ?? ""}

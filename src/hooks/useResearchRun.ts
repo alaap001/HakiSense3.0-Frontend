@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from "react"
 
-import { getDesk, startResearch } from "@/lib/agentos"
+import { ApiError, getDesk, startResearch } from "@/lib/agentos"
 import { readSSE } from "@/lib/sse"
 import type { ResearchRequest, SavedRun } from "@/types/api"
 
@@ -20,6 +20,8 @@ export interface UseResearchRun {
   feed: FeedEntry[]
   run: SavedRun | null
   error: string | null
+  /** True when the run was refused for hitting the monthly research limit (HTTP 402). */
+  limitReached: boolean
   start: (req: ResearchRequest) => Promise<void>
   cancel: () => void
 }
@@ -43,6 +45,7 @@ export function useResearchRun(
   const [feed, setFeed] = useState<FeedEntry[]>([])
   const [run, setRun] = useState<SavedRun | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [limitReached, setLimitReached] = useState(false)
   const abortRef = useRef<AbortController | null>(null)
   const seq = useRef(0)
 
@@ -62,6 +65,7 @@ export function useResearchRun(
       setFeed([])
       setRun(null)
       setError(null)
+      setLimitReached(false)
 
       let sid: string | null = null
 
@@ -130,6 +134,7 @@ export function useResearchRun(
         }
       } catch (err) {
         if (!ctrl.signal.aborted) {
+          setLimitReached(err instanceof ApiError && err.status === 402)
           setError(err instanceof Error ? err.message : String(err))
           setPhase("error")
         }
@@ -143,5 +148,5 @@ export function useResearchRun(
     setPhase((p) => (p === "running" ? "idle" : p))
   }, [])
 
-  return { phase, sessionId, currentStep, feed, run, error, start, cancel }
+  return { phase, sessionId, currentStep, feed, run, error, limitReached, start, cancel }
 }

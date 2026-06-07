@@ -1,20 +1,18 @@
 import { Loader2 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import type { RunMode, RunStatus } from "@/types/admin"
+import type { AdminPlan, RunMode, RunStatus } from "@/types/admin"
 
 /** Shared presentational atoms for the admin tables. */
 
-export function PlanBadge({ plan }: { plan: "free" | "pro" }) {
+export function PlanBadge({ plan }: { plan: AdminPlan }) {
+  const cls: Record<AdminPlan, string> = {
+    free: "border-hairline text-text-secondary",
+    pro: "border-violet bg-violet/10 text-brand-strong",
+    ultra: "border-spark/40 bg-spark/10 text-spark-strong",
+  }
   return (
-    <span
-      className={cn(
-        "rounded-full border px-2 py-0.5 text-[11px] capitalize",
-        plan === "pro"
-          ? "border-violet bg-violet/10 text-brand-strong"
-          : "border-hairline text-text-secondary",
-      )}
-    >
+    <span className={cn("rounded-full border px-2 py-0.5 text-[11px] capitalize", cls[plan])}>
       {plan}
     </span>
   )

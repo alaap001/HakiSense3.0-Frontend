@@ -1,14 +1,14 @@
+import { Link } from "react-router-dom"
 import { Lock, Sparkles } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 
 /**
- * Paywall card shown where a Pro-only capability would be. Billing isn't wired yet
- * (the entitlement scaffold reads `app_metadata.plan`), so "Upgrade" is informational
- * for now — the real Stripe flow lands in a later phase.
+ * Paywall card shown where an Ultra-only capability would be. The button routes to the
+ * billing page, which runs Razorpay checkout and activates the plan.
  */
 export function UpgradeGate({
-  title = "AI analysis is a Pro feature",
+  title = "AI trade review is an Ultra feature",
   description = "Unlock the desk's AI review — it critiques your entry, stop, sizing and plan adherence, and surfaces recurring mistakes across your journal.",
 }: {
   title?: string
@@ -24,9 +24,11 @@ export function UpgradeGate({
         <div className="flex-1">
           <p className="font-display text-sm font-semibold text-text-primary">{title}</p>
           <p className="mt-1 text-xs leading-relaxed text-text-secondary">{description}</p>
-          <Button size="sm" className="btn-primary mt-3 gap-1.5 text-white">
-            <Sparkles className="size-3.5" />
-            Upgrade to Pro
+          <Button asChild size="sm" className="btn-primary mt-3 gap-1.5 text-white">
+            <Link to="/billing?tier=ultra">
+              <Sparkles className="size-3.5" />
+              Upgrade to Ultra
+            </Link>
           </Button>
         </div>
       </div>

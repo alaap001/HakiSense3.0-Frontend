@@ -15,6 +15,9 @@ import { useAdminUser, useSetPlan } from "@/hooks/useAdmin"
 import { fmtDate, fmtDateTime, fmtMoney, fmtR, fmtSignedMoney, pnlClass } from "@/lib/journal/format"
 import { netPnl, realizedR } from "@/lib/journal/metrics"
 import { cn } from "@/lib/utils"
+import type { AdminPlan } from "@/types/admin"
+
+const PLANS: AdminPlan[] = ["free", "pro", "ultra"]
 
 const TH = "micro-label px-3 py-2.5 font-normal"
 const TD = "px-3 py-2.5"
@@ -54,7 +57,6 @@ export default function AdminUserDetail() {
   if (!data) return null
 
   const { user, trades, strategies, runs } = data
-  const nextPlan = user.plan === "pro" ? "free" : "pro"
 
   return (
     <Wrapper>
@@ -80,19 +82,31 @@ export default function AdminUserDetail() {
             </div>
           </div>
           <div className="flex flex-col items-end gap-1.5">
-            <button
-              onClick={() => id && setPlan.mutate({ id, plan: nextPlan })}
-              disabled={setPlan.isPending}
-              className="btn-secondary rounded-full px-4 py-2 text-xs disabled:opacity-60"
+            <div
+              role="group"
+              aria-label="Set plan"
+              className="flex items-center gap-1 rounded-full border border-hairline bg-panel p-1"
             >
+              {PLANS.map((p) => (
+                <button
+                  key={p}
+                  onClick={() => id && user.plan !== p && setPlan.mutate({ id, plan: p })}
+                  disabled={setPlan.isPending || user.plan === p}
+                  className={cn(
+                    "rounded-full px-3 py-1.5 text-xs capitalize transition-colors disabled:cursor-default",
+                    user.plan === p
+                      ? "bg-violet/15 text-brand-strong ring-1 ring-violet/40"
+                      : "text-text-secondary hover:text-text-primary disabled:opacity-60",
+                  )}
+                >
+                  {p}
+                </button>
+              ))}
+            </div>
+            <span className="text-[10px] text-text-secondary/60">
               {setPlan.isPending
                 ? "Updating…"
-                : nextPlan === "pro"
-                  ? "Upgrade to Pro"
-                  : "Downgrade to Free"}
-            </button>
-            <span className="text-[10px] text-text-secondary/60">
-              Applies on the user's next token refresh
+                : "Grants immediately; the user's claim refreshes on their next token refresh"}
             </span>
             {setPlan.error ? (
               <span className="text-[10px] text-neg">{(setPlan.error as Error).message}</span>

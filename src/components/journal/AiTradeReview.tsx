@@ -8,13 +8,13 @@ import { useEntitlements } from "@/hooks/useEntitlements"
 import { useTradeAnalysis } from "@/hooks/useTradeAnalysis"
 import type { Trade } from "@/types/journal"
 
-/** Pro-gated AI critique of a single trade. Free users see the upgrade card instead. */
+/** Ultra-gated AI critique of a single trade. Other plans see the upgrade card instead. */
 export function AiTradeReview({ trade }: { trade: Trade }) {
-  const { isPro } = useEntitlements()
+  const { canUseAi } = useEntitlements()
   const { getToken } = useAuth()
   const { content, status, statusLabel, error, run } = useTradeAnalysis(getToken)
 
-  if (!isPro) return <UpgradeGate />
+  if (!canUseAi) return <UpgradeGate />
 
   const streaming = status === "streaming"
 

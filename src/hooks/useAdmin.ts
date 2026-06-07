@@ -3,13 +3,16 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useAuth } from "@/contexts/AuthContext"
 import {
   adminOverview,
+  adminPlans,
   adminRuns,
   adminSetPlan,
   adminTrades,
+  adminUpdatePlan,
   adminUser,
   adminUsers,
 } from "@/lib/admin"
-import type { AdminListParams } from "@/types/admin"
+import type { PlanRow } from "@/lib/billing"
+import type { AdminListParams, AdminPlan } from "@/types/admin"
 
 /**
  * Is the signed-in user an admin? Reads the server-controlled `app_metadata.role` from the
@@ -77,10 +80,34 @@ export function useSetPlan() {
   const { getToken } = useAuth()
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: async ({ id, plan }: { id: string; plan: "free" | "pro" }) =>
+    mutationFn: async ({ id, plan }: { id: string; plan: AdminPlan }) =>
       adminSetPlan(id, plan, await getToken()),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["admin"] })
+    },
+  })
+}
+
+export function useAdminPlans() {
+  const { getToken } = useAuth()
+  const enabled = useIsAdmin()
+  return useQuery({
+    queryKey: ["admin", "plans"],
+    queryFn: async () => adminPlans(await getToken()),
+    enabled,
+  })
+}
+
+export function useUpdatePlan() {
+  const { getToken } = useAuth()
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async ({ tier, patch }: { tier: string; patch: Partial<PlanRow> }) =>
+      adminUpdatePlan(tier, patch, await getToken()),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["admin", "plans"] })
+      qc.invalidateQueries({ queryKey: ["plans"] }) // public pricing reflects the edit
+      qc.invalidateQueries({ queryKey: ["billing", "me"] }) // limits may have changed
     },
   })
 }

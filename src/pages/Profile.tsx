@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from "react"
 import { AlertCircle, Check, Copy, Loader2, Save } from "lucide-react"
 
+import { PlanUsageCard } from "@/components/billing/PlanUsageCard"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -153,6 +154,8 @@ export default function Profile() {
           </form>
         </CardContent>
       </Card>
+
+      <PlanUsageCard className="mt-6" />
 
       {/* Account details */}
       <Card className="card-glass mt-6">

@@ -7,6 +7,7 @@ import { ScrollManager } from "@/components/site/ScrollManager"
 import About from "@/pages/About"
 import Admin from "@/pages/Admin"
 import AdminUserDetail from "@/pages/AdminUserDetail"
+import Billing from "@/pages/Billing"
 import Contact from "@/pages/Contact"
 import Dashboard from "@/pages/Dashboard"
 import Journal from "@/pages/Journal"
@@ -46,6 +47,7 @@ export default function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/journal" element={<Journal />} />
           <Route path="/research/:sessionId" element={<RunView />} />
+          <Route path="/billing" element={<Billing />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />
           <Route element={<AdminGuard />}>

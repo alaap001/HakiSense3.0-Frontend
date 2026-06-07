@@ -15,6 +15,7 @@ import { EmptyState } from "@/components/app/EmptyState"
 import { LoadingState } from "@/components/app/LoadingState"
 import { PageHeader } from "@/components/app/PageHeader"
 import { PageShell } from "@/components/app/PageShell"
+import { UsageStrip } from "@/components/billing/UsageStrip"
 import { Pill } from "@/components/app/controls"
 import { TickerCombobox } from "@/components/search/TickerCombobox"
 import { Badge } from "@/components/ui/badge"
@@ -42,7 +43,7 @@ function toRequest(ticker: string, mode: Mode): ResearchRequest {
 export default function Dashboard() {
   const { getToken } = useAuth()
   const queryClient = useQueryClient()
-  const { phase, sessionId, currentStep, feed, run, error, start, cancel } =
+  const { phase, sessionId, currentStep, feed, run, error, limitReached, start, cancel } =
     useResearchRun(getToken)
   const [ticker, setTicker] = useState("")
   const [mode, setMode] = useState<Mode>("intake")
@@ -69,9 +70,13 @@ export default function Dashboard() {
     queryFn: async () => listRuns(await getToken()),
   })
 
-  // Refresh the history list when a run finishes.
+  // Refresh the history list and the usage snapshot when a run finishes (a first-time full
+  // dossier debits a research credit, so the strip/card must re-read GET /api/billing/me).
   useEffect(() => {
-    if (phase === "done") queryClient.invalidateQueries({ queryKey: ["runs"] })
+    if (phase === "done") {
+      queryClient.invalidateQueries({ queryKey: ["runs"] })
+      queryClient.invalidateQueries({ queryKey: ["billing", "me"] })
+    }
   }, [phase, queryClient])
 
   // Show meaningful history only: one card per ticker (the API is newest-first, so
@@ -107,6 +112,8 @@ export default function Dashboard() {
         }
         subtitle="Enter a ticker and watch the dossier assemble live — thesis, findings, scenarios and risks, each backed by evidence."
       />
+
+      <UsageStrip />
 
       {/* Run console — relative z-20 lifts it (and the combobox dropdown, which
           overflows the card) above the Recent-runs section below; .card-glass's
@@ -197,9 +204,20 @@ export default function Dashboard() {
 
           {/* Error */}
           {phase === "error" && error && (
-            <div className="mt-4 flex items-start gap-2 rounded-xl border border-destructive/40 bg-destructive/10 p-3 text-xs text-destructive">
-              <AlertTriangle className="mt-0.5 size-4 shrink-0" />
-              <span className="font-mono">{error}</span>
+            <div className="mt-4 rounded-xl border border-destructive/40 bg-destructive/10 p-3 text-xs text-destructive">
+              <div className="flex items-start gap-2">
+                <AlertTriangle className="mt-0.5 size-4 shrink-0" />
+                <span className="font-mono">{error}</span>
+              </div>
+              {limitReached && (
+                <Link
+                  to="/billing"
+                  className="mt-2 inline-flex items-center gap-1 font-medium text-brand hover:underline"
+                >
+                  Upgrade for more research
+                  <ArrowRight className="size-3.5" />
+                </Link>
+              )}
             </div>
           )}
 

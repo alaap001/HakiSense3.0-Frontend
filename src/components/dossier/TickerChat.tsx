@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from "react"
+import { Link } from "react-router-dom"
 import { Send, Sparkles, X } from "lucide-react"
 
 import { MarkdownView } from "@/components/dossier/MarkdownView"
@@ -26,7 +27,7 @@ export function TickerChat({
   companyName?: string
 }) {
   const { getToken } = useAuth()
-  const { messages, status, statusLabel, error, send } = useChat(ticker, getToken)
+  const { messages, status, statusLabel, error, limitReached, send } = useChat(ticker, getToken)
   const [open, setOpen] = useState(false)
   const [draft, setDraft] = useState("")
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -142,9 +143,18 @@ export function TickerChat({
         )}
 
         {error && (
-          <p className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-xs text-destructive">
-            {error}
-          </p>
+          <div className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-xs text-destructive">
+            <p>{error}</p>
+            {limitReached && (
+              <Link
+                to="/billing"
+                className="mt-1.5 inline-flex items-center gap-1 font-medium text-brand hover:underline"
+              >
+                <Sparkles className="size-3" />
+                Upgrade for more credits
+              </Link>
+            )}
+          </div>
         )}
       </div>
 

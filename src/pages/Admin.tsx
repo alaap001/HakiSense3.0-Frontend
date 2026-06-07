@@ -1,6 +1,7 @@
 import { ShieldCheck } from "lucide-react"
 
 import { AdminOverview } from "@/components/admin/AdminOverview"
+import { AdminPlansEditor } from "@/components/admin/AdminPlansEditor"
 import { AdminRunsTable } from "@/components/admin/AdminRunsTable"
 import { AdminTradesTable } from "@/components/admin/AdminTradesTable"
 import { AdminUsersTable } from "@/components/admin/AdminUsersTable"
@@ -15,6 +16,7 @@ const TABS = [
   { value: "Users", label: "Users" },
   { value: "Runs", label: "Research runs" },
   { value: "Trades", label: "Trades" },
+  { value: "Pricing", label: "Pricing" },
 ]
 
 export default function Admin() {
@@ -57,6 +59,9 @@ export default function Admin() {
         </TabsContent>
         <TabsContent value="Trades">
           <AdminTradesTable />
+        </TabsContent>
+        <TabsContent value="Pricing">
+          <AdminPlansEditor />
         </TabsContent>
       </Tabs>
     </div>

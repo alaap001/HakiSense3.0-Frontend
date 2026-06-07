@@ -1,6 +1,7 @@
-import { LogOut, Settings, Sparkles, User } from "lucide-react"
+import { CreditCard, LogOut, Settings, Sparkles, User } from "lucide-react"
 import { Link, NavLink, useNavigate } from "react-router-dom"
 
+import { PlanPill } from "@/components/billing/PlanPill"
 import { SearchTrigger } from "@/components/search/SearchTrigger"
 import { ThemeToggle } from "@/components/ThemeToggle"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -15,6 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useAuth } from "@/contexts/AuthContext"
 import { useIsAdmin } from "@/hooks/useAdmin"
+import { useEntitlements } from "@/hooks/useEntitlements"
 import { cn, getInitials } from "@/lib/utils"
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
@@ -26,6 +28,7 @@ const navLinkClass = ({ isActive }: { isActive: boolean }) =>
 export function AppNav() {
   const { displayName, user, isAuthenticated, signOut } = useAuth()
   const isAdmin = useIsAdmin()
+  const { plan } = useEntitlements()
   const navigate = useNavigate()
 
   async function handleSignOut() {
@@ -83,8 +86,11 @@ export function AppNav() {
                 align="end"
                 className="w-56 border-hairline bg-popover/95 backdrop-blur-xl"
               >
-                <DropdownMenuLabel className="flex flex-col gap-0.5">
-                  <span className="text-sm text-text-primary">{displayName}</span>
+                <DropdownMenuLabel className="flex flex-col gap-1">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-sm text-text-primary">{displayName}</span>
+                    <PlanPill plan={plan} />
+                  </div>
                   {user?.email ? (
                     <span className="font-mono text-[11px] font-normal text-text-secondary">
                       {user.email}
@@ -96,6 +102,12 @@ export function AppNav() {
                   <Link to="/profile" className="cursor-pointer">
                     <User className="size-4" />
                     Profile
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/billing" className="cursor-pointer">
+                    <CreditCard className="size-4" />
+                    Plan &amp; billing
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
