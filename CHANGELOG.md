@@ -1,5 +1,16 @@
 # Changelog — HakiSense 3.0 Frontend
 
+## 2026-06-08 — FIX: Responsive landing nav on phones (CTA no longer clips)
+
+**Task:** On phones the public landing nav overflowed — logo + "3.0" badge + theme toggle + "Sign in" + "Get started" were wider than the screen, clipping the primary "Get started" button off the right edge.
+
+**Changed:**
+- `src/components/landing/LandingNav.tsx` — below `sm`: tightened gutters (`px-4 sm:px-6`), hid the `3.0` badge, moved the theme toggle + section links + "Sign in" into a new hamburger `DropdownMenu` (reused primitive; `lucide` `Menu` icon), and kept the primary CTA ("Get started" / "Dashboard") visible in the bar. At `≥ sm` the nav is unchanged (inline links + toggle + buttons; hamburger hidden).
+
+**Unchanged:** all landing body sections (already responsive); in-app `AppNav`; nav links/routes and scroll behavior.
+**Verification:** `tsc -b` rc=0; `eslint src/components/landing/LandingNav.tsx` rc=0.
+**Execution model:** unchanged (presentational only). **Breaking changes:** none. **New dependencies:** none.
+
 ## 2026-06-07 — FIX: Refresh usage after a research run completes
 
 **Task:** After a full dossier debits a research credit (now charged on first-time runs incl. cache hits — see backend), the Dashboard usage strip/card showed stale counts (the `["billing","me"]` query was never invalidated, only `["runs"]`).
