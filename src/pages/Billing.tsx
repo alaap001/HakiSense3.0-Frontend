@@ -238,7 +238,7 @@ function PlanCard({
             {plan.dossiers_label ?? plan.research_per_month}
           </p>
           <p className="mt-1.5 font-mono text-[10px] uppercase tracking-wide text-text-secondary">
-            research / mo
+            analyst reports / mo
           </p>
         </div>
         <div className="rounded-xl border border-hairline bg-surface px-3 py-2.5">

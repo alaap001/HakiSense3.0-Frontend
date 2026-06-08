@@ -52,7 +52,7 @@ export function ReportView({
       {reportMd.trim() ? (
         <MarkdownView>{reportMd}</MarkdownView>
       ) : (
-        <EmptyState label="No report yet — run a Full dossier to generate the editor report." />
+        <EmptyState label="Nothing here yet — run a Full report to generate it." />
       )}
     </div>
   )

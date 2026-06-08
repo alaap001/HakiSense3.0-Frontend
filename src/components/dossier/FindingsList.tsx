@@ -15,7 +15,7 @@ const POLARITY: Record<Polarity, string> = {
 }
 
 export function FindingsList({ findings }: { findings: Finding[] }) {
-  if (!findings.length) return <EmptyState label="No findings yet — run a Full dossier." />
+  if (!findings.length) return <EmptyState label="No findings yet — run a Full report." />
 
   const counts = findings.reduce<Record<string, number>>((acc, f) => {
     acc[f.polarity] = (acc[f.polarity] ?? 0) + 1

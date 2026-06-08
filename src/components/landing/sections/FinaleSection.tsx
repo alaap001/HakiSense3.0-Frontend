@@ -31,7 +31,7 @@ export function FinaleSection() {
           data-reveal
         >
           <Sparkles className="size-3.5 fill-spark text-spark" />
-          Your first dossier is free
+          Your first analyst report is free
         </span>
 
         <p className="mt-7 text-lg leading-relaxed text-text-secondary" data-reveal>

@@ -19,7 +19,7 @@ export function PrincipleSection() {
             Research. <span className="text-gradient">Not recommendations.</span>
           </h2>
           <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-text-secondary">
-            We don't hand you a BUY button to hide behind. Every dossier passes a quality gate that
+            We don't hand you a BUY button to hide behind. Every analyst report passes a quality gate that
             strips opinion and keeps evidence — so the conviction is yours, and so is the edge.
             That's the whole point.
           </p>

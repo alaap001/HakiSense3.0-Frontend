@@ -11,7 +11,7 @@ const PILLARS = [
   },
   {
     icon: Layers,
-    title: "A structured dossier, assembled live",
+    title: "A structured analyst report, assembled live",
     body: "Thesis, findings, scenarios, red flags and coverage are built as discrete, inspectable parts — you watch them form, not a black box.",
   },
   {
@@ -37,7 +37,7 @@ export default function About() {
         </h1>
         <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-text-secondary">
           HakiSense is an equity-research engine. You give it a ticker; it reads the primary
-          sources and assembles a structured, evidence-backed dossier you can interrogate — a
+          sources and assembles a structured, evidence-backed analyst report you can interrogate — a
           research analyst&apos;s workflow, made transparent and fast.
         </p>
       </section>
@@ -81,7 +81,7 @@ export default function About() {
         <p className="text-sm leading-relaxed text-text-secondary">
           Under the hood, a team of specialized agents coordinates the work — intake and
           scoping, evidence retrieval, thesis construction, scenario and risk analysis — each
-          contributing to a shared, typed dossier. The result is research that&apos;s reproducible
+          contributing to a shared, structured analyst report. The result is research that&apos;s reproducible
           and traceable, rather than a single opaque generation.
         </p>
       </section>
@@ -92,7 +92,7 @@ export default function About() {
           Start with a ticker.
         </h2>
         <p className="mx-auto mt-2 max-w-md text-sm text-text-secondary">
-          Watch a dossier assemble in real time, then read it on your terms.
+          Watch an analyst report assemble in real time, then read it on your terms.
         </p>
         <Button asChild size="lg" className="btn-primary mt-6 gap-2 text-white">
           <Link to="/signup">

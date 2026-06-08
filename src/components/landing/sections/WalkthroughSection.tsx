@@ -20,7 +20,7 @@ gsap.registerPlugin(useGSAP, ScrollTrigger)
 const BEATS = [
   { n: "01", title: "Type one ticker.", body: "Any of 5,700+ listed names. No dashboards to wire up, no watchlists to babysit. Just the name." },
   { n: "02", title: "It reads everything. Live.", body: "Annual report, transcripts, filings, the footnotes — a team of AI analysts tears through all of it, in front of you, in real time." },
-  { n: "03", title: "Out comes a dossier.", body: "Thesis, evidence, scenarios, red flags — assembled, with every claim cited to a real source. A week of an analyst's work." },
+  { n: "03", title: "Out comes an analyst report.", body: "Thesis, evidence, scenarios, red flags — assembled, with every claim cited to a real source. A week of an analyst's work." },
   { n: "04", title: "Then ask it anything.", body: "Every stock keeps its own analyst on call. Ask in plain English; get answers pulled straight from the filing, page cited." },
 ]
 

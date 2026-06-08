@@ -21,7 +21,7 @@ export default function Privacy() {
             provide when you sign up.
           </li>
           <li>
-            <strong>Research activity</strong> — the tickers you research and the dossiers
+            <strong>Research activity</strong> — the tickers you research and the analyst reports
             generated for your account, so you can revisit them.
           </li>
           <li>

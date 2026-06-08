@@ -44,7 +44,7 @@ export function SiteFooter() {
               </span>
             </Link>
             <p className="mt-4 text-sm leading-relaxed text-text-secondary">
-              Evidence-gated equity research that assembles a structured dossier — thesis,
+              Evidence-gated equity research that assembles a structured analyst report — thesis,
               findings, scenarios and risks — from the filings.
             </p>
             <p className="mt-4 text-xs text-text-secondary/60">

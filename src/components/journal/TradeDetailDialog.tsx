@@ -215,7 +215,7 @@ function DetailBody({
               to={`/research/${trade.research_session_id}`}
               className="inline-flex items-center gap-1 text-xs font-medium text-brand hover:underline"
             >
-              View the research dossier for {trade.ticker}
+              View the analyst report for {trade.ticker}
               <ExternalLink className="size-3.5" />
             </Link>
           ) : null}

@@ -63,7 +63,7 @@ export default function RunView() {
       {query.isLoading && (
         <div className="mt-10 flex items-center gap-3 text-text-secondary">
           <Loader2 className="size-5 animate-spin text-brand" />
-          <span className="font-mono text-sm">Loading dossier…</span>
+          <span className="font-mono text-sm">Loading analyst report…</span>
         </div>
       )}
 
@@ -71,7 +71,7 @@ export default function RunView() {
         <div className="mt-10 flex items-start gap-2 rounded-xl border border-destructive/40 bg-destructive/10 p-4 text-sm text-destructive">
           <AlertTriangle className="mt-0.5 size-4 shrink-0" />
           <span>
-            Couldn&apos;t load this dossier. It may still be running, or the id is unknown.
+            Couldn&apos;t load this report. It may still be running, or the id is unknown.
           </span>
         </div>
       )}

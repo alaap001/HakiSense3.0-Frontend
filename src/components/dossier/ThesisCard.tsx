@@ -15,7 +15,7 @@ const STRENGTH: Record<EvidenceStrength, { width: string; color: string }> = {
 export function ThesisCard({ thesis }: { thesis: ThesisBoard }) {
   const pillars = (thesis?.pillars ?? []).filter((p) => p.status !== "retired")
   if (!thesis || (!thesis.headline && pillars.length === 0)) {
-    return <EmptyState label="No thesis yet — run a Scope + thesis or Full dossier." />
+    return <EmptyState label="No thesis yet — run a Scope + thesis or Full report." />
   }
   return (
     <div className="space-y-5">

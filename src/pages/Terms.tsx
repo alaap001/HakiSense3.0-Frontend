@@ -31,7 +31,7 @@ export default function Terms() {
 
       <LegalSection heading="2. The service">
         <p>
-          HakiSense assembles structured equity-research dossiers from primary sources. Output
+          HakiSense assembles structured equity-research analyst reports from primary sources. Output
           may contain errors, omissions, or out-of-date information, and is provided for
           informational and research purposes only.
         </p>
@@ -56,7 +56,7 @@ export default function Terms() {
       <LegalSection heading="5. Intellectual property">
         <p>
           The service, its software and its branding are owned by HakiSense and its licensors.
-          Source documents referenced in a dossier remain the property of their respective
+          Source documents referenced in an analyst report remain the property of their respective
           owners.
         </p>
       </LegalSection>

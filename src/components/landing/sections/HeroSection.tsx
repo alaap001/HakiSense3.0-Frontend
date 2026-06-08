@@ -65,18 +65,18 @@ export function HeroSection() {
       />
 
       <div className="hero-inner relative z-10 mx-auto w-full max-w-4xl px-6 text-center">
-        <p className="hero-eyebrow micro-label mb-7">HakiSense · equity research, reimagined</p>
+        <p className="hero-eyebrow micro-label mb-7">HakiSense · institutional-grade equity research</p>
 
         <div style={{ perspective: 900 }}>
           <h1 className="headline-line font-display text-4xl font-bold leading-[1.08] tracking-tight text-text-primary sm:text-5xl lg:text-6xl">
-            <span className="block">Research took a weekend.</span>
-            <span className="block text-gradient">Now it takes one search.</span>
+            <span className="block">Institutional-grade research.</span>
+            <span className="block text-gradient">For the price of a search.</span>
           </h1>
         </div>
 
         <p className="hero-sub mx-auto mt-8 max-w-2xl text-base leading-relaxed text-text-secondary sm:text-lg">
-          HakiSense reads every filing and transcript of any listed Indian stock — then hands you the
-          analyst's dossier in minutes.
+          The kind of analyst report a research desk charges lakhs for — built from primary
+          filings, every claim cited to its source, and in your hands in minutes.
         </p>
 
         <div className="hero-cta mt-9 flex flex-col items-center gap-3">

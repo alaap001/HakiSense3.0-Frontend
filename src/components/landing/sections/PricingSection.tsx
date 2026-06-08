@@ -62,7 +62,7 @@ const TIERS: Tier[] = [
   {
     id: "free",
     name: "Free",
-    tagline: "Get a real dossier in your hands — on the house.",
+    tagline: "Get a real analyst report in your hands — on the house.",
     cta: "Start free",
     dossiers: "1",
     credits: "200",
@@ -88,7 +88,7 @@ const TIERS: Tier[] = [
     credits: "3,000",
     includesLead: "Everything in Free, plus",
     features: [
-      { text: "Full dossiers — scenarios, valuation, financials & coverage" },
+      { text: "Full analyst reports — scenarios, valuation, financials & coverage" },
       { text: "Qdrant-backed deep evidence retrieval" },
       { text: "Priority research queue" },
       { text: "Room to chat through long research sessions" },
@@ -378,7 +378,7 @@ export function PricingSection() {
                         {tier.dossiers}
                       </p>
                       <p className="mt-1.5 font-mono text-[10px] uppercase tracking-wide text-text-secondary">
-                        dossiers / mo
+                        analyst reports / mo
                       </p>
                     </div>
                     <div className="rounded-xl border border-hairline bg-surface px-3 py-2.5">

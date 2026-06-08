@@ -33,7 +33,7 @@ export function DossierMock({ className }: { className?: string }) {
         </div>
         <span className="inline-flex items-center gap-1 rounded-full border border-brand/30 bg-brand/10 px-2 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wider text-brand">
           <ShieldCheck className="size-2.5" />
-          Dossier
+          Report
         </span>
       </div>
 

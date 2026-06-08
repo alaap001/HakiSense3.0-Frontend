@@ -1,5 +1,17 @@
 # Changelog — HakiSense 3.0 Frontend
 
+## 2026-06-08 — COPY: Value-led hero + rename "dossier" → "analyst report" site-wide
+
+**Task:** Improve the hero taglines and overall copy so the site reads as professional and high-value; the founder also flagged "dossier" as confusing jargon.
+
+**Changed (visible copy only — no logic/props/routes):**
+- `src/components/landing/sections/HeroSection.tsx` — new value/authority hero: eyebrow "institutional-grade equity research"; headline "Institutional-grade research. / For the price of a search."; subline reframed around "the kind of analyst report a research desk charges lakhs for … every claim cited … in minutes."
+- Renamed user-facing **"dossier" → "analyst report"** across: `mockups.tsx` (badge → "Report"), `WalkthroughSection.tsx`, `PrincipleSection.tsx`, `PricingSection.tsx` (free tagline, "Full analyst reports", quota label "analyst reports / mo"), `FinaleSection.tsx`, `SiteFooter.tsx`, `About.tsx` (+ de-jargoned "typed" → "structured"); in-app `Dashboard.tsx` (mode label "Full report", "Analyst report ready —", "View full report", empty state, subtitle), `RunView.tsx`, the five `components/dossier/*` empty-states ("run a Full report"), `journal/TradeDetailDialog.tsx`, `Billing.tsx` (quota label unified to "analyst reports / mo"); legal `Privacy.tsx`, `Terms.tsx`.
+
+**Unchanged:** all code identifiers/API fields (`components/dossier/**`, `DossierMock`, `dossiers`/`dossiers_label`), dev comments, admin "Dossiers label" (internal tool), and the strong narrative copy (Pain beats, Turn, About pillars). Mode hints ("LLM · Qdrant") left as-is (separate jargon item).
+**Verification:** `tsc -b` rc=0; `eslint` rc=0 on all 19 changed files; `grep -rni dossier src` leaves only internal identifiers.
+**Execution model:** unchanged (text only). **Breaking changes:** none. **New dependencies:** none.
+
 ## 2026-06-08 — FIX: Responsive landing nav on phones (CTA no longer clips)
 
 **Task:** On phones the public landing nav overflowed — logo + "3.0" badge + theme toggle + "Sign in" + "Get started" were wider than the screen, clipping the primary "Get started" button off the right edge.

@@ -31,7 +31,7 @@ type Mode = "intake" | "scope" | "full"
 const MODES: { id: Mode; label: string; hint: string }[] = [
   { id: "intake", label: "Intake only", hint: "no LLM · no Qdrant" },
   { id: "scope", label: "Scope + thesis", hint: "LLM · no Qdrant" },
-  { id: "full", label: "Full dossier", hint: "LLM + Qdrant · minutes" },
+  { id: "full", label: "Full report", hint: "LLM + Qdrant · minutes" },
 ]
 
 function toRequest(ticker: string, mode: Mode): ResearchRequest {
@@ -110,7 +110,7 @@ export default function Dashboard() {
             Deep research, <span className="text-gradient">not recommendations.</span>
           </>
         }
-        subtitle="Enter a ticker and watch the dossier assemble live — thesis, findings, scenarios and risks, each backed by evidence."
+        subtitle="Enter a ticker and watch the analyst report assemble live — thesis, findings, scenarios and risks, each backed by evidence."
       />
 
       <UsageStrip />
@@ -227,7 +227,7 @@ export default function Dashboard() {
               <div className="flex items-center gap-2 text-sm text-text-primary">
                 <CheckCircle2 className="size-4 text-brand" />
                 <span className="font-display font-semibold">
-                  Dossier loaded — {run.ticker}
+                  Analyst report ready — {run.ticker}
                 </span>
                 {run.gate ? (
                   <Badge
@@ -251,7 +251,7 @@ export default function Dashboard() {
                 to={`/research/${run.session_id}`}
                 className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-brand hover:underline"
               >
-                View full dossier
+                View full report
                 <ArrowRight className="size-3.5" />
               </Link>
             </div>
@@ -291,8 +291,8 @@ export default function Dashboard() {
         ) : (
           <EmptyState
             icon={Clock}
-            title="No dossiers yet"
-            description="Run a Scope or Full research above and your completed dossiers will appear here."
+            title="No reports yet"
+            description="Run a Scope or Full research above and your completed reports will appear here."
           />
         )}
       </section>

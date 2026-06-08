@@ -12,7 +12,7 @@ export function SynthesisView({
 }) {
   const memos = Object.entries(teamMemos ?? {}).filter(([, v]) => (v || "").trim())
   if (!synthesis?.trim() && !devilsAdvocate?.trim() && !memos.length) {
-    return <EmptyState label="No synthesis yet — run a Full dossier." />
+    return <EmptyState label="No synthesis yet — run a Full report." />
   }
   return (
     <div className="space-y-6">

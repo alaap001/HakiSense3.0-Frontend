@@ -16,7 +16,7 @@ function pct(p: number | undefined) {
 
 export function ScenariosCard({ scenarios }: { scenarios: Scenario[] }) {
   if (!scenarios.length) {
-    return <EmptyState label="No valuation scenarios yet — run a Full dossier." />
+    return <EmptyState label="No valuation scenarios yet — run a Full report." />
   }
   const sorted = [...scenarios].sort(
     (a, b) => ORDER.indexOf(a.name) - ORDER.indexOf(b.name),
