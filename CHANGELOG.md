@@ -1,5 +1,16 @@
 # Changelog — HakiSense 3.0 Frontend
 
+## 2026-06-08 — COPY: Revise hero headline + sub (drop the illogical "desk charges lakhs / price of a search")
+
+**Task:** Founder rejected the prior hero — an in-house research desk doesn't *charge* anyone, and "for the price of a search" was a non-sequitur. Reframe around handing the investor the power of that desk.
+
+**Changed:**
+- `src/components/landing/sections/HeroSection.tsx` — headline → "The power of a full research desk, / instantly." (gradient on "instantly."); subline → "Institutional-quality analyst reports built from the ground up. We pull from primary filings and cite every single claim, giving you conviction in a fraction of the time." Eyebrow + trust line unchanged.
+
+**Unchanged:** everything else (this supersedes only the headline/sub from the entry below).
+**Verification:** `tsc -b` rc=0; `eslint src/components/landing/sections/HeroSection.tsx` rc=0.
+**Execution model:** unchanged (text only). **Breaking changes:** none. **New dependencies:** none.
+
 ## 2026-06-08 — COPY: Value-led hero + rename "dossier" → "analyst report" site-wide
 
 **Task:** Improve the hero taglines and overall copy so the site reads as professional and high-value; the founder also flagged "dossier" as confusing jargon.

@@ -69,14 +69,14 @@ export function HeroSection() {
 
         <div style={{ perspective: 900 }}>
           <h1 className="headline-line font-display text-4xl font-bold leading-[1.08] tracking-tight text-text-primary sm:text-5xl lg:text-6xl">
-            <span className="block">Institutional-grade research.</span>
-            <span className="block text-gradient">For the price of a search.</span>
+            <span className="block">The power of a full research desk,</span>
+            <span className="block text-gradient">instantly.</span>
           </h1>
         </div>
 
         <p className="hero-sub mx-auto mt-8 max-w-2xl text-base leading-relaxed text-text-secondary sm:text-lg">
-          The kind of analyst report a research desk charges lakhs for — built from primary
-          filings, every claim cited to its source, and in your hands in minutes.
+          Institutional-quality analyst reports built from the ground up. We pull from primary
+          filings and cite every single claim, giving you conviction in a fraction of the time.
         </p>
 
         <div className="hero-cta mt-9 flex flex-col items-center gap-3">
