@@ -69,7 +69,7 @@ export function HeroSection() {
 
         <div style={{ perspective: 900 }}>
           <h1 className="headline-line font-display text-4xl font-bold leading-[1.08] tracking-tight text-text-primary sm:text-5xl lg:text-6xl">
-            <span className="block">The power of a full research desk,</span>
+            <span className="block">Power of a full research desk,</span>
             <span className="block text-gradient">instantly.</span>
           </h1>
         </div>
