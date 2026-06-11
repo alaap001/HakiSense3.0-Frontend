@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "build:tickers": "node scripts/build-tickers.mjs",
+    "build:tickers:us": "node scripts/build-tickers.mjs --market=us",
+    "build:tickers:in": "node scripts/build-tickers.mjs --market=in",
     "lint": "eslint .",
     "preview": "vite preview"
   },

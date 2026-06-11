@@ -5,6 +5,7 @@ import { useGSAP } from "@gsap/react"
 import { ArrowRight, Search } from "lucide-react"
 
 import { AgentReadingMock, ChatMock, DossierMock } from "@/components/landing/mockups"
+import { MARKET } from "@/lib/market"
 import { cn } from "@/lib/utils"
 
 gsap.registerPlugin(useGSAP, ScrollTrigger)
@@ -18,7 +19,7 @@ gsap.registerPlugin(useGSAP, ScrollTrigger)
  */
 
 const BEATS = [
-  { n: "01", title: "Type one ticker.", body: "Any of 5,700+ listed names. No dashboards to wire up, no watchlists to babysit. Just the name." },
+  { n: "01", title: "Type one ticker.", body: `Any of ${MARKET.universeCount} listed names. No dashboards to wire up, no watchlists to babysit. Just the name.` },
   { n: "02", title: "It reads everything. Live.", body: "Annual report, transcripts, filings, the footnotes — a team of AI analysts tears through all of it, in front of you, in real time." },
   { n: "03", title: "Out comes an analyst report.", body: "Thesis, evidence, scenarios, red flags — assembled, with every claim cited to a real source. A week of an analyst's work." },
   { n: "04", title: "Then ask it anything.", body: "Every stock keeps its own analyst on call. Ask in plain English; get answers pulled straight from the filing, page cited." },
@@ -30,19 +31,19 @@ function TickerCard() {
       <p className="font-mono text-[10px] uppercase tracking-wider text-text-secondary">Research any stock</p>
       <div className="mt-3 flex items-center gap-3 rounded-xl border border-hairline-strong bg-surface px-3.5 py-3">
         <Search className="size-4 shrink-0 text-brand" />
-        <span className="font-mono text-sm text-text-primary">RELIANCE</span>
+        <span className="font-mono text-sm text-text-primary">{MARKET.exampleTickers[0]}</span>
         <span className="h-4 w-px animate-pulse-glow bg-brand" aria-hidden />
         <span className="ml-auto grid size-7 shrink-0 place-items-center rounded-lg bg-brand text-white">
           <ArrowRight className="size-3.5" />
         </span>
       </div>
       <div className="mt-3 flex flex-wrap gap-1.5">
-        {["RELIANCE", "TCS", "INFY", "HDFCBANK"].map((s) => (
+        {MARKET.exampleTickers.map((s, i) => (
           <span
             key={s}
             className={cn(
               "rounded-full border px-2.5 py-1 font-mono text-[10px]",
-              s === "RELIANCE"
+              i === 0
                 ? "border-brand/40 bg-brand/10 text-brand"
                 : "border-hairline bg-surface text-text-secondary",
             )}
@@ -51,7 +52,7 @@ function TickerCard() {
           </span>
         ))}
       </div>
-      <p className="mt-3 font-mono text-[9px] text-text-secondary">5,700+ listed names · ⌘K from anywhere</p>
+      <p className="mt-3 font-mono text-[9px] text-text-secondary">{MARKET.universeCount} listed names · ⌘K from anywhere</p>
     </div>
   )
 }

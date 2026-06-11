@@ -24,6 +24,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { useAuth } from "@/contexts/AuthContext"
 import { useResearchRun } from "@/hooks/useResearchRun"
 import { listRuns } from "@/lib/agentos"
+import { MARKET } from "@/lib/market"
 import type { ResearchRequest, RunListItem } from "@/types/api"
 
 type Mode = "intake" | "scope" | "full"
@@ -142,7 +143,7 @@ export default function Dashboard() {
               value={ticker}
               onChange={(v) => setTicker(v.toUpperCase())}
               disabled={running}
-              placeholder="Research a ticker — e.g. AFFLE"
+              placeholder={`Research a ticker — e.g. ${MARKET.exampleTickers[0]}`}
               ariaLabel="Ticker symbol"
               inputClassName="h-12 border-hairline bg-surface pl-10 font-mono text-sm tracking-wide"
             />

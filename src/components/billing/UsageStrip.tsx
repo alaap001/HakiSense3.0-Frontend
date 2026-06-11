@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react"
 import { PlanPill } from "@/components/billing/PlanPill"
 import { usageState } from "@/components/billing/usage"
 import { useBilling } from "@/hooks/useBilling"
+import { formatNumber } from "@/lib/market"
 import { cn } from "@/lib/utils"
 
 /** A single "● Research — N left" reading, color-coded by how close it is to the cap. */
@@ -16,7 +17,7 @@ function Chip({ label, used, limit }: { label: string; used: number; limit: numb
       <span className={cn("size-1.5 rounded-full", dot)} />
       <span className="text-text-secondary">{label}</span>
       <span className={cn("font-mono font-semibold", tone)}>
-        {remaining.toLocaleString("en-IN")} left
+        {formatNumber(remaining)} left
       </span>
     </span>
   )

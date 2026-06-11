@@ -39,14 +39,14 @@ export function TurnSection() {
 
       <div className="relative z-10 mx-auto max-w-3xl px-6 text-center">
         <p className="text-base text-text-secondary" data-reveal>
-          We didn't think research this hard should be a luxury.
+          We didn&apos;t think research this hard should be a luxury.
         </p>
         <h2 className="turn-headline mx-auto mt-5 max-w-2xl font-display text-4xl font-bold leading-[1.08] tracking-tight text-text-primary sm:text-6xl">
           So we built the analyst <span className="text-gradient">you could never afford.</span>
         </h2>
         <p className="mx-auto mt-6 max-w-lg text-base leading-relaxed text-text-secondary" data-reveal>
           A team of AI analysts that reads everything, forgets nothing, and works in the time it
-          takes to pour a coffee. Here's what that looks like.
+          takes to pour a coffee. Here&apos;s what that looks like.
         </p>
       </div>
     </section>

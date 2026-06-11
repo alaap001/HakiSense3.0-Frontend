@@ -7,9 +7,10 @@ import { searchTickers } from "@/lib/tickers"
 import { cn } from "@/lib/utils"
 
 /**
- * Autocomplete for the Dashboard ticker field. Suggests from the NSE index but
- * still allows a free-typed symbol — the engine accepts any ticker — so pressing
- * Enter with nothing highlighted falls through to the form's submit (run).
+ * Autocomplete for the Dashboard ticker field. Suggests from the active market's
+ * index (see lib/market) but still allows a free-typed symbol — the engine accepts
+ * any ticker — so pressing Enter with nothing highlighted falls through to the
+ * form's submit (run).
  */
 export function TickerCombobox({
   value,

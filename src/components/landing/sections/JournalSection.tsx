@@ -30,11 +30,11 @@ export function JournalSection() {
           <p className="micro-label">And after the trade</p>
           <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
             Most traders never learn why they lose.{" "}
-            <span className="text-gradient">You won't be one of them.</span>
+            <span className="text-gradient">You won&apos;t be one of them.</span>
           </h2>
           <p className="mt-5 max-w-xl text-base leading-relaxed text-text-secondary">
             Log every trade, tag your setups, and watch your real edge show up in the numbers — the
-            kind of journal other platforms lock behind a paywall. Here it's
+            kind of journal other platforms lock behind a paywall. Here it&apos;s
             <span className="font-semibold text-text-primary"> free, forever.</span>
           </p>
           <ul className="mt-7 space-y-3">

@@ -1,8 +1,11 @@
 /**
- * Client-side NSE ticker search. The index (public/tickers.json) is identity only —
- * symbol, company name, sub-sector. No prices, no recommendations. Loaded lazily once
- * and held in module memory; ranking is a cheap linear scan (≈5.7k rows, sub-ms).
+ * Client-side ticker search. The index (public/tickers.<market>.json, chosen by
+ * MARKET) is identity only — symbol, company name, sector/exchange. No prices, no
+ * recommendations. Loaded lazily once and held in module memory; ranking is a cheap
+ * linear scan (a few thousand rows, sub-ms).
  */
+import { MARKET } from "@/lib/market"
+
 export type Ticker = { symbol: string; name: string; sector: string }
 
 type Indexed = Ticker & { _name: string }
@@ -13,9 +16,9 @@ let _index: Indexed[] = []
 /** Fetch + memoize the ticker list. Safe to call repeatedly; the network hit happens once. */
 export function loadTickers(): Promise<Ticker[]> {
   if (!_cache) {
-    _cache = fetch("/tickers.json")
+    _cache = fetch(MARKET.tickersFile)
       .then((r) => {
-        if (!r.ok) throw new Error(`tickers.json ${r.status}`)
+        if (!r.ok) throw new Error(`${MARKET.tickersFile} ${r.status}`)
         return r.json() as Promise<Ticker[]>
       })
       .then((data) => {

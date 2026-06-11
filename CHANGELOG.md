@@ -1,5 +1,51 @@
 # Changelog — HakiSense 3.0 Frontend
 
+## 2026-06-09 — PRICING: Divide paid-tier prices by 10 for US (₹999/₹2,999 → ~$100/$300)
+
+**Task:** Prices shown on the live US site were the old INR numbers with a `$` sign ("$999/mo"). Divide all pricing by 10 to land sensible USD figures (820 → 82).
+
+**Changed:**
+- `src/components/landing/sections/PricingSection.tsx` — static fallback aligned: Desk $100/mo (list $149) · $82/mo qtr ($246); Enterprise $300/mo (list $577) · $196/mo qtr ($588). Discounts now match backend (33/45 · 48/66).
+- **(backend repo)** `hakisense/server/billing.py` `_PLANS_FALLBACK` — same /10 values; quarterly `billed` strings ₹→$.
+- **(backend repo)** `db/migrations/0002_pricing_usd_div10.sql` — **new** migration; UPDATEs `billing_plans` pro/ultra `pricing` (incl. `amount_paise`, the server-read charge) to the /10 USD values. Did not touch `0001`.
+
+**Note:** Live prices are DB-served (`billing_plans`, admin-editable). The visible change requires either applying `0002` **or** editing the two rows in the Admin panel. `amount_paise` kept = displayed price × 100 so the charge matches the sticker. Razorpay rail/currency unchanged (deferred).
+**Verification:** `tsc --noEmit` rc=0; `billing.py` parses; no old INR numbers (999/2999/820/…) remain in either pricing source.
+**Execution model:** unchanged. **Breaking changes:** none. **New dependencies:** none.
+
+## 2026-06-09 — COPY: Restore native US-startup voice (undo over-localized / over-B2B'd landing copy)
+
+**Task:** The first US pass over-localized ("Search any **US-listed** stock" — a US startup doesn't announce "US" to US users) and bloated good, punchy taglines with forced "desk" jargon. Write like a US local, not an LLM following orders literally.
+
+**Changed:**
+- `src/lib/market.ts` — dropped the `marketAdj` field ("US-listed"); `searchPlaceholder` → "Search any stock — symbol or company…" (no "US"); `marketNoun` → "US equities"; `terminalCostPhrase` → "$25k a year".
+- Reverted landing narrative to the original voice, localizing only money/tickers/count: `HeroSection` (eyebrow, sub, "{count} stocks live now"), `PainSection` (headline + all three beats back to original; only "lakhs"→"$25k"), `TurnSection`, `WalkthroughSection` ("listed names"), `JournalSection`, `FinaleSection`, `About.tsx`.
+- Kept: the env-configurable market layer, USD currency formatting, US ticker universe, example tickers, and the **pricing** B2B per-seat re-angle (explicitly approved — belongs on a pricing page).
+
+**Unchanged:** market config infra, ticker data, currency helpers, pricing tiers.
+**Verification:** `tsc --noEmit -p tsconfig.app.json` rc=0; no "US-listed" string in any `.tsx`.
+**Execution model:** unchanged. **Breaking changes:** none. **New dependencies:** none.
+
+## 2026-06-09 — Re-target frontend to US equities for B2B / trading desks (env-configurable market)
+
+**Task:** Convert the India-focused frontend to target US customers — especially B2B and trading desks — and make the market (US vs India) configurable so nothing is hard-coded.
+
+**Changed:**
+- `src/lib/market.ts` — **new** single source of truth. Reads `VITE_MARKET` ("us" default | "in") and exposes `MARKET` (currency, locale, exchanges, example tickers, search placeholder, universe count, ticker-index path, terminal-cost phrasing) + `formatMoney()` / `formatNumber()`.
+- `.env` / `.env.example` — added `VITE_MARKET=us`.
+- `scripts/build-tickers.mjs` — market-aware (`--market=us|in`); US builds from `data/us_universe.json`, IN from `data/Tickers.csv`. `package.json` → `build:tickers:us` / `build:tickers:in`.
+- `data/us_universe.json` — **new** (mirrored from backend `db/`). `public/tickers.json` → renamed `public/tickers.in.json`; generated `public/tickers.us.json` (7,602 names).
+- `src/lib/tickers.ts` — loads `MARKET.tickersFile` instead of a hard-coded path.
+- Currency/number `en-IN`/`₹` → `MARKET` helpers in `PricingSection.tsx`, `Billing.tsx`, `AdminPlansEditor.tsx`, `ScenariosCard.tsx`, `UsageStrip.tsx`, `UsageMeter.tsx`, `CountUp.tsx`.
+- B2B re-angle (copy only, GSAP/markup untouched): `HeroSection`, `HeroSearch`, `PainSection` (rupee icon → `DollarSign`, "lakhs/yr" → `MARKET.terminalCostPhrase`), `TurnSection`, `WalkthroughSection`, `PrincipleSection`, `JournalSection`, `FinaleSection`, `About.tsx`, `mockups.tsx` (NVDA/10-K/S&P illustration), `Dashboard.tsx` placeholder.
+- `PricingSection.tsx` — static fallback re-shaped to per-seat USD desk tiers (Trial / Desk / Enterprise via existing free/pro/ultra ids) + "Talk to sales" → `/contact` line. Backend `/api/plans` still overrides.
+- `README.md` — documented the market switch + new build commands.
+
+**Unchanged:** backend repo (read-only source for `us_universe.json`); journal `format.ts` (already USD); auth, Supabase, theming, UI primitives; billing tier IDs (`free`/`pro`/`ultra`) and cycle keys (`monthly`/`quarterly`) — kept to preserve the backend contract.
+**Verification:** `tsc --noEmit -p tsconfig.app.json` rc=0; `npm run build:tickers:us` wrote 7,602 tickers.
+**Execution model:** unchanged. **Breaking changes:** none in the frontend. **New dependencies:** none.
+**Deferred (backend):** Razorpay → Stripe payment-rail migration (frontend now relabels currency/copy only); seeding `billing_plans` with USD/desk tiers; switching cycle to monthly/annual if desired.
+
 ## 2026-06-08 — COPY: Revise hero headline + sub (drop the illogical "desk charges lakhs / price of a search")
 
 **Task:** Founder rejected the prior hero — an in-house research desk doesn't *charge* anyone, and "for the price of a search" was a non-sequitur. Reframe around handing the investor the power of that desk.

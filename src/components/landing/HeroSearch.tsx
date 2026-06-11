@@ -2,6 +2,7 @@ import { useState } from "react"
 import { ArrowRight, Search } from "lucide-react"
 
 import { useTickerSearch } from "@/components/search/TickerSearchProvider"
+import { MARKET } from "@/lib/market"
 import { cn } from "@/lib/utils"
 
 /**
@@ -29,7 +30,7 @@ export function HeroSearch({ className }: { className?: string }) {
     >
       <Search className="size-5 shrink-0 text-brand" />
       <span className="flex-1 truncate text-base text-text-secondary">
-        Search any listed Indian stock…
+        {MARKET.searchPlaceholder}
       </span>
       <kbd className="hidden items-center gap-0.5 rounded border border-hairline bg-surface px-1.5 py-0.5 font-mono text-[11px] text-text-secondary/70 sm:inline-flex">
         {isMac ? "⌘" : "Ctrl"} K

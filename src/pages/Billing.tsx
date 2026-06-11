@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { useBilling, useUpgrade } from "@/hooks/useBilling"
 import { usePlans } from "@/hooks/usePlans"
 import type { Cycle, PaidTier, PlanRow } from "@/lib/billing"
+import { formatMoney, formatNumber, MARKET } from "@/lib/market"
 import { CheckoutDismissed } from "@/lib/razorpay"
 import { cn } from "@/lib/utils"
 
@@ -20,7 +21,7 @@ function UsageBar({ label, used, limit }: { label: string; used: number; limit: 
       <div className="flex items-baseline justify-between">
         <span className="micro-label">{label}</span>
         <span className="font-mono text-xs text-text-secondary">
-          {used.toLocaleString("en-IN")} / {limit.toLocaleString("en-IN")}
+          {formatNumber(used)} / {formatNumber(limit)}
         </span>
       </div>
       <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface">
@@ -88,7 +89,7 @@ export default function Billing() {
                 <p className="text-xs text-text-secondary">
                   Renews / expires{" "}
                   <span className="text-text-primary">
-                    {new Date(me.current_period_end).toLocaleDateString("en-IN")}
+                    {new Date(me.current_period_end).toLocaleDateString(MARKET.locale)}
                   </span>
                 </p>
               ) : null}
@@ -163,7 +164,7 @@ export default function Billing() {
       </div>
 
       <p className="mt-10 text-center text-xs text-text-secondary/70">
-        Payments are processed securely by Razorpay. Research, not investment advice.
+        Payments are processed securely. Research, not investment advice.
       </p>
     </PageShell>
   )
@@ -220,13 +221,13 @@ function PlanCard({
           <div className="flex items-end gap-2">
             {price.listPerMonth ? (
               <span className="pb-1.5 font-mono text-sm text-text-secondary/50 line-through">
-                ₹{price.listPerMonth.toLocaleString("en-IN")}
+                {formatMoney(price.listPerMonth)}
               </span>
             ) : null}
             <span className="font-display text-4xl font-bold tracking-tight text-text-primary">
-              ₹{price.perMonth.toLocaleString("en-IN")}
+              {formatMoney(price.perMonth)}
             </span>
-            <span className="pb-1.5 text-sm text-text-secondary">/mo</span>
+            <span className="pb-1.5 text-sm text-text-secondary">/seat · mo</span>
           </div>
         )}
         <p className="mt-2 min-h-4 text-xs text-text-secondary/70">{price.billed}</p>

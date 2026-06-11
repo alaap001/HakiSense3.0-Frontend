@@ -39,23 +39,38 @@ npm run build                   # tsc -b && vite build
 npm run lint
 ```
 
+## Market (US / India)
+
+The whole app targets one equities market, selected by `VITE_MARKET` in `.env`:
+
+- `us` (default) — USD pricing, NYSE/Nasdaq, US example tickers, the US universe.
+- `in` — INR pricing, NSE, Indian example tickers, the NSE universe.
+
+This is the single source of truth in `src/lib/market.ts` (`MARKET`, `formatMoney`,
+`formatNumber`); components read from it instead of hard-coding `$`/`₹` or `NYSE`/`NSE`.
+After changing the market, regenerate the ticker index for it (below) and restart Vite.
+
 ## Ticker search
 
 The in-app search (⌘K / Ctrl+K palette, the Dashboard combobox, and the public-landing
-"Search stocks" button) is fully client-side. It loads `public/tickers.json` — an
-identity-only index (symbol, company name, sub-sector; **no prices, no recommendations**)
-generated from `data/Tickers.csv` (the NSE list).
+"Search stocks" button) is fully client-side. It loads `public/tickers.<market>.json` —
+an identity-only index (symbol, company name, sector/exchange; **no prices, no
+recommendations**) generated from:
 
-To regenerate after editing the CSV:
+- **US** — `data/us_universe.json` (NYSE + Nasdaq, ~7.6k names; mirrored from the backend `db/`)
+- **India** — `data/Tickers.csv` (the NSE list, ~5.7k names)
+
+To regenerate after editing a source:
 
 ```bash
-npm run build:tickers           # data/Tickers.csv → public/tickers.json
+npm run build:tickers:us        # data/us_universe.json → public/tickers.us.json
+npm run build:tickers:in        # data/Tickers.csv      → public/tickers.in.json
 ```
 
-`public/tickers.json` is committed so production builds don't need the CSV. Selecting a
-result routes to `/dashboard?ticker=SYMBOL` (signed-out users sign in first, then land
-prefilled). The engine accepts any ticker, so a free-typed symbol still runs even if it
-isn't in the list.
+Both `public/tickers.*.json` files are committed so production builds don't need the
+sources. Selecting a result routes to `/dashboard?ticker=SYMBOL` (signed-out users sign
+in first, then land prefilled). The engine accepts any ticker, so a free-typed symbol
+still runs even if it isn't in the list.
 
 ## Theming (light / dark)
 

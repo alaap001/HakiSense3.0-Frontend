@@ -1,3 +1,4 @@
+import { formatMoney } from "@/lib/market"
 import { cn } from "@/lib/utils"
 import type { Scenario } from "@/types/desk"
 
@@ -30,7 +31,7 @@ export function ScenariosCard({ scenarios }: { scenarios: Scenario[] }) {
               {s.name}
             </span>
             <span className="font-mono text-lg text-text-primary">
-              ₹{Number(s.fair_value).toLocaleString("en-IN")}
+              {formatMoney(Number(s.fair_value))}
             </span>
           </div>
           <div className="mt-2 flex items-center gap-3">

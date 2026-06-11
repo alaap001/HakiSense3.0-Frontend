@@ -2,9 +2,10 @@ import { useRef } from "react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { useGSAP } from "@gsap/react"
-import { Clock, Files, IndianRupee } from "lucide-react"
+import { Clock, DollarSign, Files } from "lucide-react"
 
 import { CountUp } from "@/components/landing/CountUp"
+import { MARKET } from "@/lib/market"
 
 gsap.registerPlugin(useGSAP, ScrollTrigger)
 
@@ -38,8 +39,8 @@ const BEATS = [
     lead: "The tools that actually help cost a fortune.",
     body: (
       <>
-        A terminal runs into <span className="mark">lakhs a year</span>. A research desk, far more.
-        So most people skip the reading altogether — and trade on a tip and a feeling.
+        A terminal runs <span className="mark">{MARKET.terminalCostPhrase}</span>. A research desk,
+        far more. So most people skip the reading altogether — and trade on a tip and a feeling.
       </>
     ),
   },
@@ -115,7 +116,7 @@ export function PainSection() {
             {[
               { icon: Files, value: <CountUp end={300} suffix="+" />, label: "pages in one annual report" },
               { icon: Clock, value: <CountUp end={3} prefix="~" suffix=" days" />, label: "for a single honest read" },
-              { icon: IndianRupee, value: "lakhs / yr", label: "for tools that still make you read" },
+              { icon: DollarSign, value: MARKET.id === "us" ? "$25k / yr" : "lakhs / yr", label: "for tools that still make you read" },
             ].map((c, i) => (
               <div key={i} className="card-glass flex flex-col items-center rounded-2xl px-6 py-7 text-center">
                 <span className="grid size-9 place-items-center rounded-xl bg-brand/12 text-brand">

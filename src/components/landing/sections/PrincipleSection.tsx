@@ -1,6 +1,7 @@
 import { ShieldCheck } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
+import { MARKET } from "@/lib/market"
 
 /**
  * Act 5 — credibility. The differentiator and the honesty discipline: research,
@@ -28,7 +29,7 @@ export function PrincipleSection() {
               <ShieldCheck className="size-3 text-brand" />
               Evidence-gated
             </Badge>
-            <Badge variant="secondary" className="px-3 py-1 text-text-secondary">Indian listed equities</Badge>
+            <Badge variant="secondary" className="px-3 py-1 text-text-secondary">{MARKET.marketNoun}</Badge>
             <Badge variant="secondary" className="px-3 py-1 text-text-secondary">Source-cited findings</Badge>
           </div>
         </div>

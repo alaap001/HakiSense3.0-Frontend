@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useAdminPlans, useUpdatePlan } from "@/hooks/useAdmin"
 import type { PlanFeature, PlanRow } from "@/lib/billing"
+import { formatMoney, MARKET } from "@/lib/market"
 import { cn } from "@/lib/utils"
 
 const toInt = (s: string): number => {
@@ -40,7 +41,8 @@ export function AdminPlansEditor() {
       <p className="rounded-xl border border-hairline bg-surface/60 p-3 text-xs leading-relaxed text-text-secondary">
         Edits are the source of truth — they update the public pricing page and apply to{" "}
         <span className="text-text-primary">new</span> orders immediately. Monthly/quarterly prices
-        are entered in ₹ (the charge is derived); paid tiers must be ≥ ₹1.
+        are entered in {MARKET.currencyCode} ({MARKET.currencySymbol}, the charge is derived in minor
+        units); paid tiers must be ≥ {MARKET.currencySymbol}1.
       </p>
       {[...plans].sort((a, b) => a.sort - b.sort).map((plan) => (
         <PlanForm key={plan.tier} plan={plan} />
@@ -110,7 +112,7 @@ function PlanForm({ plan }: { plan: PlanRow }) {
           quarterlyPer,
           quarterlyTotal * 100,
           quarterlyTotal > 0
-            ? `₹${quarterlyTotal.toLocaleString("en-IN")} billed every 3 months`
+            ? `${formatMoney(quarterlyTotal)} billed every 3 months`
             : "Forever — no card",
         ),
       },
@@ -195,7 +197,7 @@ function PlanForm({ plan }: { plan: PlanRow }) {
           />
         </Field>
 
-        <Field label="Monthly price (₹/mo)">
+        <Field label={`Monthly price (${MARKET.currencySymbol}/mo)`}>
           <Input
             type="number"
             min={0}
@@ -204,7 +206,7 @@ function PlanForm({ plan }: { plan: PlanRow }) {
             className={inputCls}
           />
         </Field>
-        <Field label="Quarterly total (₹ / 3 mo)">
+        <Field label={`Quarterly total (${MARKET.currencySymbol} / 3 mo)`}>
           <Input
             type="number"
             min={0}
@@ -213,7 +215,7 @@ function PlanForm({ plan }: { plan: PlanRow }) {
             className={inputCls}
           />
         </Field>
-        <Field label="List price (₹/mo, 0 = none)">
+        <Field label={`List price (${MARKET.currencySymbol}/mo, 0 = none)`}>
           <Input
             type="number"
             min={0}
@@ -240,7 +242,7 @@ function PlanForm({ plan }: { plan: PlanRow }) {
 
       {isFree ? (
         <p className="mt-3 text-[11px] text-text-secondary/60">
-          Free tier: prices are ignored (kept at ₹0). Editing limits here changes the free
+          Free tier: prices are ignored (kept at {MARKET.currencySymbol}0). Editing limits here changes the free
           allowance for every user.
         </p>
       ) : null}

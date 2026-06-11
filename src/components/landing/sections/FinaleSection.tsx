@@ -35,7 +35,7 @@ export function FinaleSection() {
         </span>
 
         <p className="mt-7 text-lg leading-relaxed text-text-secondary" data-reveal>
-          The weekend of reading. The terminal you couldn't afford. The move you kept missing.
+          The weekend of reading. The terminal you couldn&apos;t afford. The move you kept missing.
         </p>
         <h2
           className="mt-3 font-display text-4xl font-bold leading-[1.08] tracking-tight sm:text-6xl"

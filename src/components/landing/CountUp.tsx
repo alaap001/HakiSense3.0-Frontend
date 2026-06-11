@@ -3,6 +3,8 @@ import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { useGSAP } from "@gsap/react"
 
+import { MARKET } from "@/lib/market"
+
 gsap.registerPlugin(useGSAP, ScrollTrigger)
 
 interface CountUpProps {
@@ -31,7 +33,7 @@ export function CountUp({
   const ref = useRef<HTMLSpanElement>(null)
 
   const format = (v: number) =>
-    `${prefix}${v.toLocaleString("en-IN", {
+    `${prefix}${v.toLocaleString(MARKET.locale, {
       minimumFractionDigits: decimals,
       maximumFractionDigits: decimals,
     })}${suffix}`

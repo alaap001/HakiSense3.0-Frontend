@@ -5,6 +5,7 @@ import { useGSAP } from "@gsap/react"
 import { ChevronDown } from "lucide-react"
 
 import { HeroSearch } from "@/components/landing/HeroSearch"
+import { MARKET } from "@/lib/market"
 
 gsap.registerPlugin(useGSAP, ScrollTrigger)
 
@@ -81,11 +82,13 @@ export function HeroSection() {
 
         <div className="hero-cta mt-9 flex flex-col items-center gap-3">
           <HeroSearch />
-          <p className="font-mono text-xs text-text-secondary/70">Try RELIANCE · TCS · INFY</p>
+          <p className="font-mono text-xs text-text-secondary/70">
+            Try {MARKET.exampleTickers.slice(0, 3).join(" · ")}
+          </p>
         </div>
 
         <p className="hero-trust mt-6 text-xs text-text-secondary">
-          Free to start · no card required · 5,700+ stocks live now
+          Free to start · no card required · {MARKET.universeCount} stocks live now
         </p>
 
         <a

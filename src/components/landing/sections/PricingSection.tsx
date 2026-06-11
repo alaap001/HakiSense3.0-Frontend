@@ -6,17 +6,21 @@ import { Button } from "@/components/ui/button"
 import { useAuth } from "@/contexts/AuthContext"
 import { usePlans } from "@/hooks/usePlans"
 import type { PlanRow } from "@/lib/billing"
+import { formatMoney } from "@/lib/market"
 import { cn } from "@/lib/utils"
 
 /**
- * Act 5.5 — the offer. Three INR tiers the visitor can click to select (Pro is the
- * default, "Most popular"). The selected card gets the emerald hero emphasis — ring,
- * glow, tint, raise, filled CTA — so picking a plan feels tactile even though billing
- * isn't wired yet (a later Stripe phase just reads the choice). Savings stay in
- * money-green (pos), keeping the brand's one deliberate orange for the Finale chip.
+ * Act 5.5 — the offer. Three per-seat tiers the visitor can click to select (Desk is
+ * the default, "Most popular"). The selected card gets the emerald hero emphasis —
+ * ring, glow, tint, raise, filled CTA — so picking a plan feels tactile even though
+ * billing isn't wired yet (a later Stripe phase just reads the choice). Savings stay
+ * in money-green (pos), keeping the brand's one deliberate orange for the Finale chip.
  *
- * Quarterly is the default cycle and every price is shown PER MONTH, so switching to
- * quarterly visibly drops the headline number — the strongest nudge toward the sale.
+ * Quarterly is the default cycle and every price is shown PER SEAT / MONTH, so switching
+ * to quarterly visibly drops the headline number — the strongest nudge toward the sale.
+ *
+ * Prices here are the STATIC FALLBACK used only if GET /api/plans returns nothing; the
+ * live, admin-editable plans override them. Currency follows MARKET (lib/market).
  *
  * Cards are composed from Tailwind utilities (NOT .card-glass, which hard-sets
  * box-shadow and would swallow the ring/shadow). The select transition animates only
@@ -54,82 +58,77 @@ type Tier = {
   quarterly: CyclePrice
 }
 
-// Originals derived from the post-discount price the founder set:
-//   Pro 999 ÷ (1−0.33) = 1,491   ·   Ultra 2,999 ÷ (1−0.48) = 5,767
-// Quarterly = list × 3 then the quarterly discount (45% Pro / 66% Ultra), shown ÷3 as
-// a per-month figure: Pro 2,460/qtr → 820/mo · Ultra 5,882/qtr → 1,961/mo.
+// Per-seat fallback pricing for US B2B desks (USD). Quarterly is shown as a per-seat,
+// per-month figure; the `billed` line states the true per-seat quarterly charge.
 const TIERS: Tier[] = [
   {
     id: "free",
-    name: "Free",
-    tagline: "Get a real analyst report in your hands — on the house.",
+    name: "Trial",
+    tagline: "Put the desk through its paces — one full report, on us.",
     cta: "Start free",
     dossiers: "1",
     credits: "200",
     features: [
-      { text: "Evidence-gated thesis, findings & risks" },
+      { text: "One full evidence-gated analyst report" },
       { text: "Live-streamed research run" },
-      { text: "Ask-the-stock chat with cited sources" },
-      { text: "Free trade journal — forever" },
+      { text: "Ask-the-filing chat with cited sources" },
+      { text: "Trade journal — free forever" },
       { text: "Equity curve, win-rate & R-multiples" },
-      { text: "Calendar heatmap & performance breakdowns" },
       { text: "Your research history, saved" },
     ],
-    monthly: { perMonth: 0, billed: "Forever — no card" },
-    quarterly: { perMonth: 0, billed: "Forever — no card" },
+    monthly: { perMonth: 0, billed: "No card required" },
+    quarterly: { perMonth: 0, billed: "No card required" },
   },
   {
     id: "pro",
-    name: "Pro",
-    tagline: "For the investor who researches every week.",
+    name: "Desk",
+    tagline: "For the analyst or PM running names every day.",
     popular: true,
-    cta: "Go Pro",
+    cta: "Start a Desk seat",
     dossiers: "30",
     credits: "3,000",
-    includesLead: "Everything in Free, plus",
+    includesLead: "Everything in Trial, plus",
     features: [
       { text: "Full analyst reports — scenarios, valuation, financials & coverage" },
-      { text: "Qdrant-backed deep evidence retrieval" },
+      { text: "Deep evidence retrieval across filings & transcripts" },
       { text: "Priority research queue" },
-      { text: "Room to chat through long research sessions" },
-      { text: "Unlimited research history" },
+      { text: "Shared research history across your seats" },
+      { text: "Room to dig through long research sessions" },
       { text: "Early access to new research agents" },
     ],
-    monthly: { perMonth: 999, listPerMonth: 1491, discount: 33, billed: "billed monthly" },
+    monthly: { perMonth: 100, listPerMonth: 149, discount: 33, billed: "per seat · billed monthly" },
     quarterly: {
-      perMonth: 820,
-      listPerMonth: 1491,
+      perMonth: 82,
+      listPerMonth: 149,
       discount: 45,
-      billed: "₹2,460 billed every 3 months",
+      billed: `${formatMoney(246)} per seat · billed quarterly`,
     },
   },
   {
     id: "ultra",
-    name: "Ultra",
-    tagline: "Desk-grade volume, plus an AI eye on your trades.",
-    cta: "Go Ultra",
+    name: "Enterprise",
+    tagline: "Desk-grade volume, plus an AI eye on every trade.",
+    cta: "Go Enterprise",
     dossiers: "150",
     credits: "25,000",
-    includesLead: "Everything in Pro, plus",
+    includesLead: "Everything in Desk, plus",
     features: [
-      { text: "AI-powered analysis on your Journal trades", spark: true },
-      { text: "AI critique of entries, stops, sizing & plan adherence" },
-      { text: "Recurring-mistake detection across your journal" },
+      { text: "AI-powered review of your Journal trades", spark: true },
+      { text: "Critique of entries, stops, sizing & plan adherence" },
+      { text: "Recurring-mistake detection across the desk" },
       { text: "The highest research & chat limits" },
-      { text: "Earliest access to new features" },
-      { text: "Priority support" },
+      { text: "SSO, API access & priority support" },
+      { text: "Custom coverage & volume seats on request" },
     ],
-    monthly: { perMonth: 2999, listPerMonth: 5767, discount: 48, billed: "billed monthly" },
+    monthly: { perMonth: 300, listPerMonth: 577, discount: 48, billed: "per seat · billed monthly" },
     quarterly: {
-      perMonth: 1961,
-      listPerMonth: 5767,
+      perMonth: 196,
+      listPerMonth: 577,
       discount: 66,
-      billed: "₹5,882 billed every 3 months",
+      billed: `${formatMoney(588)} per seat · billed quarterly`,
     },
   },
 ]
-
-const inr = (n: number) => n.toLocaleString("en-IN")
 
 function PriceBlock({
   tier,
@@ -168,7 +167,7 @@ function PriceBlock({
       <div className="mt-2.5 flex items-end gap-2">
         {p.listPerMonth ? (
           <span className="pb-1.5 font-mono text-sm text-text-secondary/50 line-through">
-            ₹{inr(p.listPerMonth)}
+            {formatMoney(p.listPerMonth)}
           </span>
         ) : null}
         <span
@@ -177,9 +176,9 @@ function PriceBlock({
             highlight ? "text-gradient" : "text-text-primary",
           )}
         >
-          ₹{inr(p.perMonth)}
+          {formatMoney(p.perMonth)}
         </span>
-        <span className="pb-1.5 text-sm text-text-secondary">/mo</span>
+        <span className="pb-1.5 text-sm text-text-secondary">/seat · mo</span>
       </div>
       <p className="mt-2 min-h-4 text-xs text-text-secondary/70">{p.billed}</p>
     </div>
@@ -215,7 +214,7 @@ export function PricingSection() {
     [plans],
   )
 
-  // Free → start using the app; paid tiers → the billing page (it runs Razorpay checkout).
+  // Trial → start using the app; paid seats → the billing page (it runs checkout).
   // Signed-out visitors are sent to sign up first.
   const ctaHref = (tier: Tier) =>
     tier.id === "free"
@@ -250,13 +249,14 @@ export function PricingSection() {
         <div className="mx-auto max-w-2xl text-center" data-reveal>
           <p className="micro-label">Pricing</p>
           <h2 className="mt-3 font-display text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl">
-            Founding-member pricing.{" "}
-            <span className="text-gradient">Before it goes up.</span>
+            Desk-grade research.{" "}
+            <span className="text-gradient">At per-seat prices.</span>
           </h2>
           <p className="mt-4 text-base leading-relaxed text-text-secondary">
-            Lock in launch rates while we&apos;re early — up to{" "}
-            <span className="font-semibold text-text-primary">66% off</span>. Your free
-            journal stays free, and there&apos;s no card to start.
+            A rounding error next to a terminal seat. Add analysts as the desk grows — no
+            annual lock-in, no per-report metering games. Lock in launch rates while
+            we&apos;re early —{" "}
+            <span className="font-semibold text-text-primary">up to 52% off</span>.
           </p>
         </div>
 
@@ -279,7 +279,7 @@ export function PricingSection() {
                 {c}
                 {c === "quarterly" ? (
                   <span className="ml-1.5 rounded-full bg-pos/20 px-1.5 py-0.5 text-[10px] font-bold text-pos">
-                    SAVE 66%
+                    SAVE 52%
                   </span>
                 ) : null}
               </button>
@@ -288,7 +288,7 @@ export function PricingSection() {
           <p className="text-xs text-text-secondary">
             {cycle === "quarterly" ? (
               <span className="font-medium text-pos">
-                Best value — you&apos;re locking in up to 66% off with quarterly billing.
+                Best value — you&apos;re locking in up to 52% off with quarterly billing.
               </span>
             ) : (
               <button
@@ -296,7 +296,7 @@ export function PricingSection() {
                 onClick={() => setCycle("quarterly")}
                 className="font-medium text-brand-strong underline-offset-2 hover:underline"
               >
-                Switch to quarterly and save up to 66% →
+                Switch to quarterly and save up to 52% →
               </button>
             )}
           </p>
@@ -442,8 +442,14 @@ export function PricingSection() {
         </div>
 
         <p className="mt-10 text-center text-xs text-text-secondary/70" data-reveal>
-          Free to start · no card required · cancel anytime. Founding-member rates — lock yours
+          Free to start · no card required · cancel anytime. Launch rates — lock yours
           in today. Chat credits power follow-up questions on any stock (1 credit ≈ one message).
+        </p>
+        <p className="mt-3 text-center text-sm text-text-secondary" data-reveal>
+          Need SSO, API access, custom coverage or volume seats for the whole desk?{" "}
+          <Link to="/contact" className="font-medium text-brand-strong underline-offset-2 hover:underline">
+            Talk to sales →
+          </Link>
         </p>
       </div>
     </section>

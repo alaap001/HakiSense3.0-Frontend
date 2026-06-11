@@ -24,11 +24,11 @@ export function DossierMock({ className }: { className?: string }) {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="grid size-8 place-items-center rounded-lg bg-brand/12 font-display text-xs font-bold text-brand">
-            RI
+            NV
           </span>
           <div className="leading-tight">
-            <p className="font-display text-sm font-semibold text-text-primary">RELIANCE</p>
-            <p className="font-mono text-[10px] text-text-secondary">Oil &amp; Gas · NSE</p>
+            <p className="font-display text-sm font-semibold text-text-primary">NVDA</p>
+            <p className="font-mono text-[10px] text-text-secondary">Semiconductors · Nasdaq</p>
           </div>
         </div>
         <span className="inline-flex items-center gap-1 rounded-full border border-brand/30 bg-brand/10 px-2 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wider text-brand">
@@ -43,9 +43,9 @@ export function DossierMock({ className }: { className?: string }) {
 
       <div className="mt-4 space-y-2.5">
         {[
-          { label: "New-energy capex funded", val: 82, tone: "pos" as const },
-          { label: "Retail margin durable", val: 64, tone: "spark" as const },
-          { label: "Telco ARPU inflects", val: 38, tone: "neg" as const },
+          { label: "Data-center demand durable", val: 82, tone: "pos" as const },
+          { label: "Gross margin holds >70%", val: 64, tone: "spark" as const },
+          { label: "China revenue at risk", val: 38, tone: "neg" as const },
         ].map((p) => (
           <div key={p.label}>
             <div className="flex items-center justify-between text-[10px]">
@@ -72,9 +72,9 @@ export function DossierMock({ className }: { className?: string }) {
           Bull
         </span>
         <p className="text-[10px] leading-relaxed text-text-secondary">
-          Gross debt down 11% YoY; coverage now 6.4×.
+          Data-center revenue +154% YoY; now 78% of sales.
           <span className="ml-1 inline-flex items-center gap-0.5 font-mono text-[9px] text-brand">
-            <FileText className="size-2.5" /> FY24 AR · p.142
+            <FileText className="size-2.5" /> FY24 10-K · p.142
           </span>
         </p>
       </div>
@@ -91,7 +91,7 @@ export function ChatMock({ className }: { className?: string }) {
           <Sparkles className="size-3.5" />
         </span>
         <div className="leading-tight">
-          <p className="font-display text-xs font-semibold text-text-primary">Ask TCS</p>
+          <p className="font-display text-xs font-semibold text-text-primary">Ask NVDA</p>
           <p className="font-mono text-[9px] text-text-secondary">grounded in its filings</p>
         </div>
         <span className="ml-auto flex items-center gap-1 font-mono text-[9px] text-pos">
@@ -102,10 +102,10 @@ export function ChatMock({ className }: { className?: string }) {
 
       <div className="mt-3 space-y-2.5">
         <div className="ml-auto w-fit max-w-[80%] rounded-2xl rounded-br-sm bg-brand/12 px-3 py-2 text-[11px] text-text-primary">
-          Is deal TCV growth keeping up with attrition?
+          Is data-center growth offsetting the gaming slowdown?
         </div>
         <div className="w-fit max-w-[88%] rounded-2xl rounded-bl-sm border border-hairline bg-surface px-3 py-2 text-[11px] leading-relaxed text-text-secondary">
-          TCV rose 23% YoY while attrition cooled to 12.1% — the gap is closing.
+          Data-center rose 154% YoY while gaming slipped 6% — the mix more than offsets it.
           <span className="mt-1.5 flex w-fit items-center gap-1 rounded-md bg-sky/12 px-1.5 py-0.5 font-mono text-[8px] text-sky">
             <FileText className="size-2.5" /> Q4 transcript · CFO remarks
           </span>
@@ -180,10 +180,10 @@ export function JournalMock({ className }: { className?: string }) {
  */
 export function AgentReadingMock({ className }: { className?: string }) {
   const docs = [
-    { name: "Annual Report FY24", meta: "312 pages", state: "done" as const },
+    { name: "10-K FY24", meta: "221 pages", state: "done" as const },
     { name: "Q4 Earnings Call", meta: "transcript", state: "done" as const },
     { name: "Investor Presentation", meta: "48 slides", state: "reading" as const },
-    { name: "Credit Rating Note", meta: "ICRA", state: "queued" as const },
+    { name: "Credit Rating Note", meta: "S&P", state: "queued" as const },
   ]
   return (
     <div className={cn("card-glass w-[20rem] max-w-full overflow-hidden rounded-2xl p-5", className)}>
@@ -193,7 +193,7 @@ export function AgentReadingMock({ className }: { className?: string }) {
             <Loader2 className="size-3.5 animate-spin" />
           </span>
           <div className="leading-tight">
-            <p className="font-display text-sm font-semibold text-text-primary">Reading RELIANCE</p>
+            <p className="font-display text-sm font-semibold text-text-primary">Reading NVDA</p>
             <p className="font-mono text-[9px] text-text-secondary">12 lenses · live</p>
           </div>
         </div>
